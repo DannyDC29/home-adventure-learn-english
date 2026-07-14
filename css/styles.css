@@ -1,0 +1,337 @@
+/* ============================================
+   Home Adventure: Learn English — Estilos
+   Diseño colorido/amigable, formas CSS (sin sprites),
+   totalmente responsive.
+   ============================================ */
+
+:root {
+  --color-bg: #fef6e4;
+  --color-primary: #4a6fa5;
+  --color-accent: #ffb84c;
+  --color-correct: #3ecf8e;
+  --color-incorrect: #ff5c5c;
+  --color-player: #5b6ee1;
+  --color-card-bg: #ffffff;
+  --shadow-soft: 0 6px 16px rgba(0, 0, 0, 0.12);
+  --radius-lg: 18px;
+  --radius-md: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  background: linear-gradient(160deg, #fef6e4 0%, #cbe7ff 100%);
+  color: #2b2b2b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+}
+
+/* ---------- Header ---------- */
+.game-header {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.game-header h1 {
+  margin: 0;
+  font-size: clamp(1.4rem, 4vw, 2.2rem);
+  color: var(--color-primary);
+}
+
+.game-header h1 span {
+  color: var(--color-accent);
+}
+
+.level-title {
+  margin: 4px 0 0;
+  font-weight: bold;
+  color: #555;
+}
+
+/* ---------- HUD ---------- */
+.hud {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  background: var(--color-card-bg);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
+  padding: 10px 16px;
+  margin: 12px 0;
+  width: 100%;
+  max-width: 900px;
+}
+
+.hud-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: bold;
+  font-size: clamp(0.8rem, 2vw, 1rem);
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #f4f4fb;
+}
+
+.hud-icon {
+  font-size: 1.1em;
+}
+
+.hud-value {
+  color: var(--color-primary);
+}
+
+/* ---------- Área de juego ---------- */
+.game-wrapper {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.game-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 8 / 5;   /* espacio lógico 800x500 */
+  background: repeating-linear-gradient(
+      45deg,
+      #fff7ea,
+      #fff7ea 40px,
+      #ffedd0 40px,
+      #ffedd0 80px
+    );
+  border: 6px solid var(--color-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+  touch-action: none;
+}
+
+.room-label {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: rgba(74, 111, 165, 0.85);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 3px 10px;
+  border-radius: 999px;
+  z-index: 5;
+}
+
+.instructions {
+  margin-top: 10px;
+  text-align: center;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+kbd {
+  background: #eee;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 0.85em;
+}
+
+/* ---------- Personaje: sprite PNG animado por dirección ---------- */
+.player {
+  position: absolute;
+  height: 18%;   /* altura FIJA: garantiza el mismo tamaño en las 4 direcciones */
+  z-index: 10;
+}
+
+.player-sprite-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;   /* siempre ocupa el 100% de la altura fija de .player */
+  width: auto;    /* el ancho se ajusta solo según la proporción de cada PNG */
+  object-fit: contain;
+  /* Si tus PNG son pixel art, descomenta para que no se vean borrosos: */
+  /* image-rendering: pixelated; */
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* ---------- Objetos recolectables (formas CSS) ---------- */
+.item {
+  position: absolute;
+  width: 10.5%;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border-radius: var(--radius-md);
+  text-align: center;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.15s ease, opacity 0.25s ease;
+  padding: 4px;
+}
+
+.item-icon-img {
+  width: 55%;
+  height: 55%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  /* Ligera sombra para que el ícono resalte sobre el color de fondo */
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.25));
+}
+
+.item-label {
+  font-size: 0.62rem;
+  font-weight: bold;
+}
+
+.item:hover {
+  transform: scale(1.05);
+}
+
+.item.collected {
+  opacity: 0;
+  transform: scale(0.4);
+  pointer-events: none;
+}
+
+.item.shake {
+  animation: shake 0.4s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6%); }
+  40% { transform: translateX(6%); }
+  60% { transform: translateX(-4%); }
+  80% { transform: translateX(4%); }
+}
+
+/* Variantes de color para los objetos (no indican si son correctos o no) */
+.item-color-1 { background: #ff8fa3; }
+.item-color-2 { background: #57cc99; }
+.item-color-3 { background: #ffb703; }
+.item-color-4 { background: #8ecae6; }
+.item-color-5 { background: #b5838d; }
+.item-color-6 { background: #cdb4db; }
+.item-color-7 { background: #ff9f1c; }
+.item-color-8 { background: #6a994e; }
+.item-color-9 { background: #f28482; }
+.item-color-10 { background: #457b9d; }
+.item-color-11 { background: #e07a5f; }
+
+/* ---------- Toast (mensaje flotante) ---------- */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-incorrect);
+  color: white;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 999px;
+  box-shadow: var(--shadow-soft);
+  z-index: 100;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.toast.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(20px);
+}
+
+/* ---------- Overlay de nivel completado ---------- */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  transition: opacity 0.3s ease;
+}
+
+.overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.overlay-card {
+  background: var(--color-card-bg);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  text-align: center;
+  max-width: 90%;
+  width: 380px;
+  box-shadow: var(--shadow-soft);
+  animation: pop 0.35s ease;
+}
+
+@keyframes pop {
+  from { transform: scale(0.7); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+.overlay-card h2 {
+  margin-top: 0;
+  color: var(--color-correct);
+}
+
+.btn-primary {
+  margin-top: 16px;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.btn-primary:hover {
+  background: #3a5a8a;
+  transform: translateY(-2px);
+}
+
+/* ---------- Utilidades ---------- */
+.hidden {
+  display: none !important;
+}
+
+/* ---------- Responsive ajustes finos ---------- */
+@media (max-width: 480px) {
+  .hud {
+    gap: 6px;
+    padding: 8px;
+  }
+  .hud-item {
+    font-size: 0.7rem;
+    padding: 3px 8px;
+  }
+  .item {
+    font-size: 0.55rem;
+  }
+}

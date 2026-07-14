@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home Adventure: Learn English</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <header class="game-header">
+    <h1>🏠 Home Adventure: <span>Learn English</span></h1>
+    <p class="level-title" id="levelTitle">Level 1 — Living Room Hunt</p>
+  </header>
+
+  <!-- HUD: puntaje, monedas, vidas, estrellas, contador de objetos -->
+  <section class="hud" id="hud">
+    <div class="hud-item">
+      <span class="hud-icon">⭐</span>
+      <span class="hud-label">Score:</span>
+      <span class="hud-value" id="scoreValue">0</span>
+    </div>
+    <div class="hud-item">
+      <span class="hud-icon">🪙</span>
+      <span class="hud-label">Coins:</span>
+      <span class="hud-value" id="coinsValue">0</span>
+    </div>
+    <div class="hud-item" id="livesContainer">
+      <span class="hud-label">Lives:</span>
+      <span class="hud-value" id="livesValue">❤️❤️❤️</span>
+    </div>
+    <div class="hud-item">
+      <span class="hud-icon">🌟</span>
+      <span class="hud-label">Stars:</span>
+      <span class="hud-value" id="starsValue">0</span>
+    </div>
+    <div class="hud-item">
+      <span class="hud-label">Objects:</span>
+      <span class="hud-value" id="objectsValue">0/7</span>
+    </div>
+  </section>
+
+  <!-- Área de juego -->
+  <main class="game-wrapper">
+    <div class="game-container" id="gameContainer">
+      <!-- El personaje y los objetos se insertan dinámicamente vía JS -->
+      <div class="room-label">Living Room</div>
+    </div>
+
+    <!-- Mensaje de instrucción -->
+    <p class="instructions">
+      Move with <kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> or <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>.
+      Collect only the <strong>Living Room</strong> objects!
+    </p>
+  </main>
+
+  <!-- Overlay de nivel completado -->
+  <div class="overlay hidden" id="levelCompleteOverlay">
+    <div class="overlay-card">
+      <h2>🎉 ¡Nivel Completado! 🎉</h2>
+      <p id="overlaySummary">You collected all the Living Room objects!</p>
+      <button id="nextLevelBtn" class="btn-primary">Siguiente Nivel →</button>
+    </div>
+  </div>
+
+  <!-- Mensaje flotante para objeto incorrecto -->
+  <div class="toast hidden" id="toast"></div>
+
+  <!-- Scripts: orden importa, core primero, luego entidades, luego el nivel -->
+  <script src="js/core/audio.js"></script>
+  <script src="js/core/input.js"></script>
+  <script src="js/core/hud.js"></script>
+  <script src="js/core/game.js"></script>
+  <script src="js/entities/player.js"></script>
+  <script src="js/entities/item.js"></script>
+  <script src="js/levels/level1.js"></script>
+</body>
+</html>
