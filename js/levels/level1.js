@@ -38,6 +38,89 @@
 
   let player = null;
   let items = [];
+
+  // ---------- Precarga de imágenes ----------
+  // Descarga TODAS las imágenes (sprites del personaje en las 8 direcciones
+  // + íconos de los objetos) ANTES de empezar a jugar. Esto evita que la
+  // animación se vea lenta/entrecortada la primera vez que se necesita cada
+  // imagen (algo que se nota mucho más cuando el juego está en internet,
+  // ej. GitHub Pages, que al abrirlo localmente desde el disco).
+  function collectAllImageUrls() {
+    const urls = new Set();
+
+    // Sprites del personaje: SPRITE_FRAMES está definido en player.js y es
+    // visible aquí porque ambos scripts comparten el mismo scope global.
+    Object.values(SPRITE_FRAMES).forEach((frames) => {
+      urls.add(frames.idle);
+      frames.walk.forEach((src) => urls.add(src));
+    });
+
+    // Íconos de los objetos del nivel.
+    Object.values(ICONS).forEach((src) => urls.add(src));
+
+    return [...urls];
+  }
+
+  function preloadImage(url) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve({ url, ok: true });
+      img.onerror = () => resolve({ url, ok: false });
+      img.src = url;
+    });
+  }
+
+  async function preloadAllImages(onProgress) {
+    const urls = collectAllImageUrls();
+    let loaded = 0;
+    const results = await Promise.all(
+      urls.map((url) =>
+        preloadImage(url).then((result) => {
+          loaded += 1;
+          if (onProgress) onProgress(loaded, urls.length);
+          return result;
+        })
+      )
+    );
+
+    // Si alguna imagen no cargó, lo avisamos en la consola con su ruta
+    // exacta — el motivo más común es una diferencia de mayúsculas/
+    // minúsculas entre el nombre del archivo y el nombre usado en el
+    // código (en GitHub Pages esto SÍ importa, aunque en tu computador
+    // no se note).
+    const failed = results.filter((r) => !r.ok);
+    if (failed.length > 0) {
+      console.warn(
+        "⚠️ No se pudieron cargar estas imágenes (revisa mayúsculas/minúsculas y que el archivo exista en esa ruta exacta):",
+        failed.map((f) => f.url)
+      );
+    }
+  }
+
+  // Pantalla simple de "Cargando..." mientras se precargan las imágenes.
+  function showLoadingScreen() {
+    const el = document.createElement("div");
+    el.id = "loadingScreen";
+    el.className = "overlay";
+    el.innerHTML = `
+      <div class="overlay-card">
+        <h2>⏳ Loading...</h2>
+        <p id="loadingProgressText">Preparing the game (0%)</p>
+      </div>
+    `;
+    document.body.appendChild(el);
+    return el;
+  }
+
+  function updateLoadingScreen(el, loaded, total) {
+    const percent = Math.round((loaded / total) * 100);
+    const textEl = el.querySelector("#loadingProgressText");
+    if (textEl) textEl.textContent = `Preparing the game (${percent}%)`;
+  }
+
+  function hideLoadingScreen(el) {
+    el.remove();
+  }
   let toastTimeoutId = null;
   const incorrectCooldowns = new WeakMap(); // evita spam de sonido/toast por overlap continuo
 
@@ -187,5 +270,11 @@
 
   // ---------- Arranque ----------
   InputManager.init();
-  setup();
+
+  (async () => {
+    const loadingEl = showLoadingScreen();
+    await preloadAllImages((loaded, total) => updateLoadingScreen(loadingEl, loaded, total));
+    hideLoadingScreen(loadingEl);
+    setup();
+  })();
 })();
