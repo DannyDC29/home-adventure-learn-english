@@ -54,6 +54,14 @@ const InputManager = (() => {
     return !!state[action];
   }
 
+  // Permite que otras fuentes de input (ej. botones táctiles en pantalla)
+  // activen/desactiven una dirección, igual que si fuera una tecla.
+  function setPressed(action, isDown) {
+    if (action in state) {
+      state[action] = !!isDown;
+    }
+  }
+
   function isMoving() {
     return state.up || state.down || state.left || state.right;
   }
@@ -61,6 +69,7 @@ const InputManager = (() => {
   return {
     init,
     isPressed,
+    setPressed,
     isMoving,
   };
 })();

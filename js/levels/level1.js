@@ -270,6 +270,7 @@
 
   // ---------- Arranque ----------
   InputManager.init();
+  TouchControls.init();
 
   (async () => {
     const loadingEl = showLoadingScreen();
