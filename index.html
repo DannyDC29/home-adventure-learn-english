@@ -8,74 +8,94 @@
 </head>
 <body>
 
-  <header class="game-header">
-    <h1>🏠 Home Adventure: <span>Learn English</span></h1>
-    <p class="level-title" id="levelTitle">Level 1 — Living Room Hunt</p>
-  </header>
-
-  <!-- HUD: puntaje, monedas, vidas, estrellas, contador de objetos -->
-  <section class="hud" id="hud">
-    <div class="hud-item">
-      <span class="hud-icon">⭐</span>
-      <span class="hud-label">Score:</span>
-      <span class="hud-value" id="scoreValue">0</span>
-    </div>
-    <div class="hud-item">
-      <span class="hud-icon">🪙</span>
-      <span class="hud-label">Coins:</span>
-      <span class="hud-value" id="coinsValue">0</span>
-    </div>
-    <div class="hud-item" id="livesContainer">
-      <span class="hud-label">Lives:</span>
-      <span class="hud-value" id="livesValue">❤️❤️❤️</span>
-    </div>
-    <div class="hud-item">
-      <span class="hud-icon">🌟</span>
-      <span class="hud-label">Stars:</span>
-      <span class="hud-value" id="starsValue">0</span>
-    </div>
-    <div class="hud-item">
-      <span class="hud-label">Objects:</span>
-      <span class="hud-value" id="objectsValue">0/7</span>
-    </div>
-  </section>
-
-  <!-- Área de juego -->
-  <main class="game-wrapper">
-    <div class="game-container" id="gameContainer">
-      <!-- El personaje y los objetos se insertan dinámicamente vía JS -->
-      <div class="room-label">Living Room</div>
-    </div>
-
-    <!-- Mensaje de instrucción -->
-    <p class="instructions">
-      Move with <kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> or <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>.
-      Collect only the <strong>Living Room</strong> objects!
-    </p>
-
-    <!-- Controles táctiles (D-pad): solo se muestran en celular/tablet,
-         en computador se usa el teclado y este bloque queda oculto. -->
-    <div class="touch-controls" id="touchControls">
-      <button type="button" class="touch-btn touch-btn-up" data-direction="up" aria-label="Move up">▲</button>
-      <button type="button" class="touch-btn touch-btn-left" data-direction="left" aria-label="Move left">◀</button>
-      <button type="button" class="touch-btn touch-btn-down" data-direction="down" aria-label="Move down">▼</button>
-      <button type="button" class="touch-btn touch-btn-right" data-direction="right" aria-label="Move right">▶</button>
-    </div>
-  </main>
-
-  <!-- Overlay de nivel completado -->
-  <div class="overlay hidden" id="levelCompleteOverlay">
-    <div class="overlay-card">
-      <h2>🎉 ¡Nivel Completado! 🎉</h2>
-      <p id="overlaySummary">You collected all the Living Room objects!</p>
-      <button id="nextLevelBtn" class="btn-primary">Siguiente Nivel →</button>
-    </div>
+  <!-- ============ PANTALLA 1: PORTADA ============ -->
+  <div class="screen cover-screen" id="coverScreen">
+    <!-- El título ya viene dibujado dentro de la imagen de fondo
+         (assets/backgrounds/cover-background.jpg), por eso aquí no hay
+         texto de título: solo la imagen + el botón Play superpuesto. -->
+    <button type="button" id="playBtn" class="btn-play-cover" aria-label="Play"></button>
   </div>
 
-  <!-- Mensaje flotante para objeto incorrecto -->
-  <div class="toast hidden" id="toast"></div>
+  <!-- ============ PANTALLA 2: SELECCIÓN DE PERSONAJE ============ -->
+  <div class="screen hidden" id="characterSelectScreen">
+    <h2 class="character-select-title">Choose your character</h2>
+    <div class="character-options">
+      <button type="button" class="character-card selected" data-character="girl">
+        <img src="assets/sprites/girl/Nina_Down_Idle.png" alt="Girl character">
+        <span>Girl</span>
+      </button>
+      <button type="button" class="character-card disabled" data-character="boy" disabled>
+        <span class="coming-soon-badge">Coming soon</span>
+        <div class="character-placeholder">🧒</div>
+        <span>Boy</span>
+      </button>
+    </div>
+    <button type="button" id="startGameBtn" class="btn-primary btn-large">▶ Play</button>
+  </div>
 
-  <!-- Scripts: orden importa, core primero, luego entidades, luego el nivel -->
+  <!-- ============ PANTALLA 3: JUEGO (Nivel 1) ============ -->
+  <div class="screen hidden" id="gameScreen">
+
+    <header class="game-header">
+      <p class="level-title" id="levelTitle">Level 1 — Living Room Hunt</p>
+    </header>
+
+    <!-- HUD: puntaje, vidas, contador de objetos -->
+    <section class="hud" id="hud">
+      <div class="hud-item">
+        <span class="hud-icon">⭐</span>
+        <span class="hud-label">Score:</span>
+        <span class="hud-value" id="scoreValue">0</span>
+      </div>
+      <div class="hud-item" id="livesContainer">
+        <span class="hud-label">Lives:</span>
+        <span class="hud-value" id="livesValue">❤️❤️❤️</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">Objects:</span>
+        <span class="hud-value" id="objectsValue">0/7</span>
+      </div>
+    </section>
+
+    <!-- Área de juego -->
+    <main class="game-wrapper">
+      <div class="game-container" id="gameContainer">
+        <!-- El personaje y los objetos se insertan dinámicamente vía JS -->
+        <div class="room-label">Living Room</div>
+      </div>
+
+      <!-- Mensaje de instrucción -->
+      <p class="instructions">
+        Move with <kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> or <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>.
+        Collect only the <strong>Living Room</strong> objects!
+      </p>
+
+      <!-- Controles táctiles (D-pad): solo se muestran en celular/tablet,
+           en computador se usa el teclado y este bloque queda oculto. -->
+      <div class="touch-controls" id="touchControls">
+        <button type="button" class="touch-btn touch-btn-up" data-direction="up" aria-label="Move up">▲</button>
+        <button type="button" class="touch-btn touch-btn-left" data-direction="left" aria-label="Move left">◀</button>
+        <button type="button" class="touch-btn touch-btn-down" data-direction="down" aria-label="Move down">▼</button>
+        <button type="button" class="touch-btn touch-btn-right" data-direction="right" aria-label="Move right">▶</button>
+      </div>
+    </main>
+
+    <!-- Overlay de nivel completado -->
+    <div class="overlay hidden" id="levelCompleteOverlay">
+      <div class="overlay-card">
+        <h2>🎉 ¡Nivel Completado! 🎉</h2>
+        <p id="overlaySummary">You collected all the Living Room objects!</p>
+        <button id="nextLevelBtn" class="btn-primary">Siguiente Nivel →</button>
+      </div>
+    </div>
+
+    <!-- Mensaje flotante para objeto incorrecto -->
+    <div class="toast hidden" id="toast"></div>
+
+  </div>
+
+  <!-- Scripts: orden importa, core primero, luego entidades, luego el nivel,
+       y al final el manejo de pantallas (portada -> personaje -> juego). -->
   <script src="js/core/audio.js"></script>
   <script src="js/core/input.js"></script>
   <script src="js/core/touch-controls.js"></script>
@@ -84,5 +104,6 @@
   <script src="js/entities/player.js"></script>
   <script src="js/entities/item.js"></script>
   <script src="js/levels/level1.js"></script>
+  <script src="js/core/screens.js"></script>
 </body>
 </html>

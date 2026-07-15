@@ -33,26 +33,187 @@ body {
   padding: 16px;
 }
 
-/* ---------- Header ---------- */
+/* ---------- Pantallas: Portada / Selección de personaje / Juego ----------
+   Solo una pantalla está visible a la vez (las demás llevan clase .hidden,
+   controlado por js/core/screens.js).
+   IMPORTANTE: este bloque genérico va ANTES de .cover-screen a propósito,
+   para que el max-width específico de la portada (más abajo) sea el que
+   gane en el navegador. */
+.screen {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 40px 16px;
+}
+
+/* Overrides por ID (siempre ganan sobre la clase .screen, sin importar
+   el orden en el archivo): cada pantalla puede ser más ancha que el
+   valor genérico de 480px según cuánto contenido tenga. */
+#characterSelectScreen {
+  max-width: 600px;
+}
+
+#gameScreen {
+  max-width: 900px; /* mismo ancho que .hud y .game-wrapper */
+  padding-top: 16px; /* espacio entre el borde superior de la pantalla y el título del nivel (antes 40px, heredado de .screen) */
+}
+
+#coverScreen {
+  max-width: 900px; /* refuerzo por ID además del que ya tiene .cover-screen */
+  margin-top: 6vh; /* empuja la portada un poco hacia abajo, en vez de quedar pegada arriba */
+}
+
+/* ---------- Portada (imagen de fondo con botón Play superpuesto) ---------- */
+.cover-screen {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  aspect-ratio: 1024 / 572;   /* misma proporción de tu imagen cover-background.jpg */
+  background-image: url("../assets/backgrounds/cover-background.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+  padding: 0; /* la portada no necesita el padding genérico de .screen */
+}
+
+/* Botón Play superpuesto sobre la imagen, en la misma posición donde
+   aparece en la imagen de referencia. Usamos % para que se mantenga
+   en el lugar correcto sin importar el tamaño de pantalla.
+   El botón en sí ES tu imagen (assets/backgrounds/play-button.png),
+   no texto ni CSS dibujado. */
+.btn-play-cover {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: clamp(140px, 22%, 260px);
+  aspect-ratio: 220 / 91;   /* misma proporción de tu imagen del botón */
+  background-image: url("../assets/backgrounds/play-button.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+.btn-play-cover:hover {
+  transform: translate(-50%, -52%) scale(1.06);
+  filter: brightness(1.1) drop-shadow(0 6px 8px rgba(0, 0, 0, 0.3));
+}
+
+.btn-play-cover:active {
+  transform: translate(-50%, -46%) scale(0.94);
+  filter: brightness(0.95);
+}
+
+/* (El título del juego ahora viene dibujado dentro de cover-background.jpg,
+   por eso ya no hay reglas de texto para un h1 dentro de .cover-screen) */
+
+.btn-large {
+  font-size: 1.15rem;
+  padding: 16px 42px;
+}
+
+.character-select-title {
+  color: var(--color-primary);
+  margin-bottom: 24px;
+  font-size: clamp(1.2rem, 4vw, 1.6rem);
+}
+
+.character-options {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.character-card {
+  position: relative;
+  background: var(--color-card-bg);
+  border: 3px solid transparent;
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  width: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.15s ease, border-color 0.15s ease;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #2b2b2b;
+}
+
+.character-card img,
+.character-placeholder {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+}
+
+.character-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.4rem;
+  background: #f4f4fb;
+  border-radius: var(--radius-md);
+}
+
+.character-card:hover {
+  transform: translateY(-3px);
+}
+
+.character-card.selected {
+  border-color: var(--color-primary);
+}
+
+.character-card.disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.character-card.disabled:hover {
+  transform: none;
+}
+
+.coming-soon-badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: var(--color-accent);
+  color: white;
+  font-size: 0.62rem;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 999px;
+  box-shadow: var(--shadow-soft);
+}
+
+/* ---------- Header (dentro de la pantalla de juego) ---------- */
 .game-header {
   text-align: center;
   margin-bottom: 8px;
 }
 
-.game-header h1 {
-  margin: 0;
-  font-size: clamp(1.4rem, 4vw, 2.2rem);
-  color: var(--color-primary);
-}
-
-.game-header h1 span {
-  color: var(--color-accent);
-}
-
 .level-title {
-  margin: 4px 0 0;
+  margin: 0;
   font-weight: bold;
-  color: #555;
+  font-size: clamp(0.9rem, 2.2vw, 1.15rem);
+  color: var(--color-primary);
 }
 
 /* ---------- HUD ---------- */

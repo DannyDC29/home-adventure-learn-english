@@ -97,30 +97,6 @@
     }
   }
 
-  // Pantalla simple de "Cargando..." mientras se precargan las imágenes.
-  function showLoadingScreen() {
-    const el = document.createElement("div");
-    el.id = "loadingScreen";
-    el.className = "overlay";
-    el.innerHTML = `
-      <div class="overlay-card">
-        <h2>⏳ Loading...</h2>
-        <p id="loadingProgressText">Preparing the game (0%)</p>
-      </div>
-    `;
-    document.body.appendChild(el);
-    return el;
-  }
-
-  function updateLoadingScreen(el, loaded, total) {
-    const percent = Math.round((loaded / total) * 100);
-    const textEl = el.querySelector("#loadingProgressText");
-    if (textEl) textEl.textContent = `Preparing the game (${percent}%)`;
-  }
-
-  function hideLoadingScreen(el) {
-    el.remove();
-  }
   let toastTimeoutId = null;
   const incorrectCooldowns = new WeakMap(); // evita spam de sonido/toast por overlap continuo
 
@@ -269,13 +245,18 @@
   });
 
   // ---------- Arranque ----------
-  InputManager.init();
-  TouchControls.init();
+  // La precarga de imágenes empieza YA, en segundo plano, mientras el
+  // jugador todavía está en la portada / pantalla de selección de
+  // personaje — así, para cuando presione "Play", lo más probable es
+  // que las imágenes ya estén en caché y el nivel arranque sin demora.
+  const preloadPromise = preloadAllImages();
 
-  (async () => {
-    const loadingEl = showLoadingScreen();
-    await preloadAllImages((loaded, total) => updateLoadingScreen(loadingEl, loaded, total));
-    hideLoadingScreen(loadingEl);
+  // window.startLevel1 lo llama js/core/screens.js cuando el jugador
+  // elige su personaje y confirma con el botón "Play".
+  window.startLevel1 = async function startLevel1(selectedCharacter) {
+    await preloadPromise;
+    InputManager.init();
+    TouchControls.init();
     setup();
-  })();
+  };
 })();
