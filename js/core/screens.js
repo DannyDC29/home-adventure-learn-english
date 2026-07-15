@@ -44,10 +44,17 @@
     startGameBtn.disabled = true;
     startGameBtn.textContent = "Loading...";
 
-    await window.startLevel1(selectedCharacter);
-
-    startGameBtn.disabled = false;
-    startGameBtn.textContent = "▶ Play";
-    showScreen(gameScreen);
+    try {
+      await window.startLevel1(selectedCharacter);
+      showScreen(gameScreen);
+    } catch (err) {
+      // Si algo falla, avisamos claramente en vez de quedar "colgados"
+      // para siempre en Loading sin explicación.
+      console.error("⚠️ No se pudo iniciar el juego:", err);
+      alert("Hubo un problema al cargar el juego. Abre la consola (F12) para ver el detalle del error.");
+    } finally {
+      startGameBtn.disabled = false;
+      startGameBtn.textContent = "▶ Play";
+    }
   });
 })();

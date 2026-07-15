@@ -48,12 +48,16 @@
   function collectAllImageUrls() {
     const urls = new Set();
 
-    // Sprites del personaje: SPRITE_FRAMES está definido en player.js y es
-    // visible aquí porque ambos scripts comparten el mismo scope global.
-    Object.values(SPRITE_FRAMES).forEach((frames) => {
-      urls.add(frames.idle);
-      frames.walk.forEach((src) => urls.add(src));
-    });
+    try {
+      // Sprites del personaje: SPRITE_FRAMES está definido en player.js y es
+      // visible aquí porque ambos scripts comparten el mismo scope global.
+      Object.values(SPRITE_FRAMES).forEach((frames) => {
+        urls.add(frames.idle);
+        frames.walk.forEach((src) => urls.add(src));
+      });
+    } catch (err) {
+      console.error("⚠️ No se pudo leer SPRITE_FRAMES (¿player.js cargó bien?):", err);
+    }
 
     // Íconos de los objetos del nivel.
     Object.values(ICONS).forEach((src) => urls.add(src));
@@ -253,8 +257,18 @@
 
   // window.startLevel1 lo llama js/core/screens.js cuando el jugador
   // elige su personaje y confirma con el botón "Play".
+  //
+  // IMPORTANTE: está envuelto en try/catch/finally para que, si alguna
+  // imagen falla en cargar o algo sale mal durante la preparación,
+  // el juego arranque igual (en vez de quedarse "colgado" mostrando
+  // "Loading..." para siempre). El error se imprime en la consola
+  // (F12 → Console) para poder diagnosticarlo.
   window.startLevel1 = async function startLevel1(selectedCharacter) {
-    await preloadPromise;
+    try {
+      await preloadPromise;
+    } catch (err) {
+      console.error("⚠️ Falló la precarga de imágenes, se inicia el juego de todos modos:", err);
+    }
     InputManager.init();
     TouchControls.init();
     setup();
