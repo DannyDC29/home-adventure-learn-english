@@ -56,6 +56,17 @@ const HUD = (() => {
     render();
   }
 
+  // Reinicia el progreso de la misión actual (usado por el botón
+  // "Try Again" del overlay de Game Over): vidas al máximo, puntaje
+  // y objetos recolectados en cero. objectsTotal no cambia porque
+  // sigue siendo el mismo nivel.
+  function resetLevelProgress() {
+    state.score = 0;
+    state.objectsCollected = 0;
+    state.lives = state.maxLives;
+    render();
+  }
+
   function addStars(amount) {
     state.stars += amount;
     render();
@@ -89,6 +100,7 @@ const HUD = (() => {
     addCoins,
     loseLife,
     resetLives,
+    resetLevelProgress,
     addStars,
     incrementObjectsCollected,
     isLevelComplete,

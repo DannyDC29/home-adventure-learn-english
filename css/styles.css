@@ -524,6 +524,125 @@ kbd {
   display: none !important;
 }
 
+/* ---------- Pantalla: Instrucciones generales ---------- */
+.instructions-title {
+  color: var(--color-primary);
+  margin-bottom: 20px;
+  font-size: clamp(1.2rem, 4vw, 1.6rem);
+}
+
+.instructions-list {
+  list-style: none;
+  margin: 0 0 24px 0;
+  padding: 0;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: left;
+}
+
+.instructions-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--color-card-bg);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  box-shadow: var(--shadow-soft);
+  font-size: 0.95rem;
+}
+
+.instructions-icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+/* ---------- Overlay: instrucciones del nivel ---------- */
+.overlay-room-tag {
+  display: inline-block;
+  background: var(--color-accent);
+  color: #2b2b2b;
+  font-weight: bold;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-bottom: 8px;
+}
+
+.overlay-examples,
+.overlay-extra {
+  list-style: none;
+  margin: 12px 0;
+  padding: 0;
+  text-align: left;
+}
+
+.overlay-examples li,
+.overlay-extra li {
+  background: #f4f7fb;
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+}
+
+/* ---------- Overlay: Game Over ---------- */
+.overlay-card-danger h2 {
+  color: var(--color-incorrect);
+}
+
+/* ---------- Banner de mensajes del juego ---------- */
+.message-banner {
+  position: fixed;
+  top: 18%;
+  left: 50%;
+  transform: translate(-50%, -12px);
+  background: var(--color-primary);
+  color: white;
+  font-weight: bold;
+  font-size: 1.05rem;
+  padding: 12px 28px;
+  border-radius: 999px;
+  box-shadow: var(--shadow-soft);
+  z-index: 300;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.message-banner.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.message-banner.variant-success {
+  background: var(--color-correct);
+}
+
+.message-banner.variant-error {
+  background: var(--color-incorrect);
+}
+
+.message-banner.variant-info {
+  background: var(--color-primary);
+}
+
+@media (max-width: 480px) {
+  .message-banner {
+    font-size: 0.85rem;
+    padding: 10px 18px;
+    white-space: normal;
+    max-width: 90%;
+  }
+}
+
+
 /* ---------- Responsive ajustes finos ---------- */
 @media (max-width: 480px) {
   .hud {

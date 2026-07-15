@@ -29,12 +29,25 @@
   const ITEM_SIZE = 70;
   const PLAYER_SIZE = 60;
   const MARGIN = 10; // margen respecto a los bordes del escenario
+  const LEVEL_KEY = "1.1"; // clave en GAME_INSTRUCTIONS.levels (js/data/instructions.js)
 
   const container = document.getElementById("gameContainer");
   const toastEl = document.getElementById("toast");
   const overlayEl = document.getElementById("levelCompleteOverlay");
   const overlaySummaryEl = document.getElementById("overlaySummary");
   const nextLevelBtn = document.getElementById("nextLevelBtn");
+
+  const levelInstructionsOverlay = document.getElementById("levelInstructionsOverlay");
+  const levelInstructionsRoomEl = document.getElementById("levelInstructionsRoom");
+  const levelInstructionsTitleEl = document.getElementById("levelInstructionsTitle");
+  const levelInstructionsMissionEl = document.getElementById("levelInstructionsMission");
+  const levelInstructionsExamplesEl = document.getElementById("levelInstructionsExamples");
+  const levelInstructionsExtraEl = document.getElementById("levelInstructionsExtra");
+  const startMissionBtn = document.getElementById("startMissionBtn");
+
+  const gameOverOverlay = document.getElementById("gameOverOverlay");
+  const gameOverSummaryEl = document.getElementById("gameOverSummary");
+  const retryBtn = document.getElementById("retryBtn");
 
   let player = null;
   let items = [];
@@ -145,7 +158,77 @@
     }, 1200);
   }
 
+  // ---------- Instrucciones del nivel ----------
+  // Llena el overlay con el texto de GAME_INSTRUCTIONS.levels[LEVEL_KEY]
+  // (definido en js/data/instructions.js) y lo muestra. El juego queda
+  // en pausa (GameEngine no ha arrancado todavía) hasta que el jugador
+  // presiona "Start Mission".
+  function populateLevelInstructions() {
+    const data = GAME_INSTRUCTIONS.levels[LEVEL_KEY];
+    if (!data) return;
+
+    levelInstructionsRoomEl.textContent = data.room;
+    levelInstructionsTitleEl.textContent = data.title;
+    levelInstructionsMissionEl.textContent = data.mission;
+
+    if (data.examples && data.examples.length > 0) {
+      levelInstructionsExamplesEl.innerHTML = data.examples
+        .map((ex) => `<li>${ex}</li>`)
+        .join("");
+      levelInstructionsExamplesEl.classList.remove("hidden");
+    } else {
+      levelInstructionsExamplesEl.innerHTML = "";
+      levelInstructionsExamplesEl.classList.add("hidden");
+    }
+
+    if (data.extra && data.extra.length > 0) {
+      levelInstructionsExtraEl.innerHTML = data.extra
+        .map((ex) => `<li>${ex}</li>`)
+        .join("");
+      levelInstructionsExtraEl.classList.remove("hidden");
+    } else {
+      levelInstructionsExtraEl.innerHTML = "";
+      levelInstructionsExtraEl.classList.add("hidden");
+    }
+  }
+
+  function showLevelInstructions() {
+    populateLevelInstructions();
+    levelInstructionsOverlay.classList.remove("hidden");
+  }
+
+  function hideLevelInstructions() {
+    levelInstructionsOverlay.classList.add("hidden");
+  }
+
+  // Oculta las instrucciones, muestra "Mission Started! / Good Luck!"
+  // y, una vez terminada esa secuencia, arranca el loop del juego.
+  function beginMission() {
+    hideLevelInstructions();
+    Messages.showSequence(
+      [Messages.CATALOG.missionStarted, Messages.CATALOG.goodLuck],
+      {
+        variant: "info",
+        duration: 1100,
+        gap: 150,
+        onComplete: () => GameEngine.start(update),
+      }
+    );
+  }
+
+  startMissionBtn.addEventListener("click", beginMission);
+
+  // Quita del escenario al jugador y los objetos de la partida
+  // anterior (usado por el botón "Try Again" antes de reconstruir
+  // el tablero), sin tocar la etiqueta de la habitación.
+  function clearBoard() {
+    container.querySelectorAll(".player, .item").forEach((el) => el.remove());
+  }
+
   // ---------- Inicialización del nivel ----------
+  // Construye el tablero (jugador + objetos) pero NO arranca el loop
+  // del juego todavía: eso ocurre en beginMission(), después de que
+  // el jugador ve las instrucciones y presiona "Start Mission".
   function setup() {
     HUD.init({ objectsTotal: CORRECT_ITEMS.length });
 
@@ -186,8 +269,6 @@
         icon: ICONS[def.name],
       });
     });
-
-    GameEngine.start(update);
   }
 
   // ---------- Loop principal ----------
@@ -219,6 +300,7 @@
     HUD.incrementObjectsCollected();
     AudioManager.playCorrect();
     AudioManager.speak(item.name);
+    Messages.showBanner(Messages.CATALOG.correct, "success", 900);
 
     if (HUD.isLevelComplete()) {
       onLevelComplete();
@@ -234,15 +316,52 @@
     AudioManager.playIncorrect();
     item.shake();
     showToast(`❌ "${item.name}" doesn't belong in the Living Room!`);
+    Messages.showBanner(Messages.CATALOG.wrongObject, "error", 900);
+
+    // Cada objeto incorrecto cuesta una vida. Al llegar a 0, termina
+    // la partida (antes esto nunca se descontaba).
+    const remainingLives = HUD.loseLife();
+    if (remainingLives <= 0) {
+      onGameOver();
+    }
   }
 
   function onLevelComplete() {
     GameEngine.stop();
     const state = HUD.getState();
-    overlaySummaryEl.textContent =
-      `You collected all 7 Living Room objects! Final score: ${state.score} points.`;
-    overlayEl.classList.remove("hidden");
+    Messages.showSequence(
+      [Messages.CATALOG.greatJob, Messages.CATALOG.missionComplete],
+      {
+        variant: "success",
+        duration: 1100,
+        gap: 150,
+        onComplete: () => {
+          overlaySummaryEl.textContent =
+            `You collected all 7 Living Room objects! Final score: ${state.score} points.`;
+          overlayEl.classList.remove("hidden");
+        },
+      }
+    );
   }
+
+  // Detiene el juego, avisa con el banner y muestra el overlay de
+  // Game Over con el botón para reintentar el mismo nivel.
+  function onGameOver() {
+    GameEngine.stop();
+    Messages.showBanner(Messages.CATALOG.gameOver, "error", 1500);
+    gameOverSummaryEl.textContent = Messages.CATALOG.gameOver;
+    setTimeout(() => {
+      gameOverOverlay.classList.remove("hidden");
+    }, 700);
+  }
+
+  retryBtn.addEventListener("click", () => {
+    gameOverOverlay.classList.add("hidden");
+    clearBoard();
+    setup();
+    HUD.resetLevelProgress();
+    beginMission();
+  });
 
   nextLevelBtn.addEventListener("click", () => {
     alert("¡Nivel 2 — Organize the Living Room llegará pronto! 🚧");
@@ -256,7 +375,9 @@
   const preloadPromise = preloadAllImages();
 
   // window.startLevel1 lo llama js/core/screens.js cuando el jugador
-  // elige su personaje y confirma con el botón "Play".
+  // confirma las instrucciones generales. Prepara el tablero y muestra
+  // las instrucciones propias del nivel; el juego en sí no arranca
+  // hasta que el jugador presiona "Start Mission" (ver beginMission()).
   //
   // IMPORTANTE: está envuelto en try/catch/finally para que, si alguna
   // imagen falla en cargar o algo sale mal durante la preparación,
@@ -269,8 +390,10 @@
     } catch (err) {
       console.error("⚠️ Falló la precarga de imágenes, se inicia el juego de todos modos:", err);
     }
+    Messages.init();
     InputManager.init();
     TouchControls.init();
     setup();
+    showLevelInstructions();
   };
 })();

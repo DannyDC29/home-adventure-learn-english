@@ -9,11 +9,13 @@
 (function initScreens() {
   const coverScreen = document.getElementById("coverScreen");
   const characterSelectScreen = document.getElementById("characterSelectScreen");
+  const generalInstructionsScreen = document.getElementById("generalInstructionsScreen");
   const gameScreen = document.getElementById("gameScreen");
 
   const playBtn = document.getElementById("playBtn");
   const startGameBtn = document.getElementById("startGameBtn");
-  const allScreens = [coverScreen, characterSelectScreen, gameScreen];
+  const continueToLevelBtn = document.getElementById("continueToLevelBtn");
+  const allScreens = [coverScreen, characterSelectScreen, generalInstructionsScreen, gameScreen];
 
   // Por ahora solo la niña es jugable; el niño se muestra pero está
   // deshabilitado ("Coming soon") hasta que se creen sus sprites.
@@ -23,6 +25,18 @@
   function showScreen(screenToShow) {
     allScreens.forEach((screen) => screen.classList.add("hidden"));
     screenToShow.classList.remove("hidden");
+  }
+
+  // Llena la lista de instrucciones generales una sola vez con los
+  // datos de js/data/instructions.js (GAME_INSTRUCTIONS.general).
+  function renderGeneralInstructions() {
+    const list = document.getElementById("generalInstructionsList");
+    if (!list || list.childElementCount > 0) return; // ya está llena
+    GAME_INSTRUCTIONS.general.forEach(({ icon, text }) => {
+      const li = document.createElement("li");
+      li.innerHTML = `<span class="instructions-icon">${icon}</span><span>${text}</span>`;
+      list.appendChild(li);
+    });
   }
 
   // Portada -> Selección de personaje
@@ -39,10 +53,17 @@
     });
   });
 
-  // Selección de personaje -> Juego (Nivel 1)
-  startGameBtn.addEventListener("click", async () => {
-    startGameBtn.disabled = true;
-    startGameBtn.textContent = "Loading...";
+  // Selección de personaje -> Instrucciones generales
+  startGameBtn.addEventListener("click", () => {
+    renderGeneralInstructions();
+    showScreen(generalInstructionsScreen);
+  });
+
+  // Instrucciones generales -> Juego (arranca Nivel 1 y muestra sus
+  // instrucciones propias antes de dejar jugar; ver js/levels/level1.js)
+  continueToLevelBtn.addEventListener("click", async () => {
+    continueToLevelBtn.disabled = true;
+    continueToLevelBtn.textContent = "Loading...";
 
     try {
       await window.startLevel1(selectedCharacter);
@@ -53,8 +74,8 @@
       console.error("⚠️ No se pudo iniciar el juego:", err);
       alert("Hubo un problema al cargar el juego. Abre la consola (F12) para ver el detalle del error.");
     } finally {
-      startGameBtn.disabled = false;
-      startGameBtn.textContent = "▶ Play";
+      continueToLevelBtn.disabled = false;
+      continueToLevelBtn.textContent = "Got it! ▶";
     }
   });
 })();
