@@ -35,13 +35,17 @@
 
   <!-- ============ PANTALLA 2.5: INSTRUCCIONES GENERALES ============ -->
   <!-- Se muestra una vez, justo después de elegir personaje y antes de
-       entrar al juego. Su contenido se llena dinámicamente desde
-       js/data/instructions.js (GAME_INSTRUCTIONS.general) por
-       js/core/screens.js. -->
+       entrar al juego. La imagen cambia según el personaje elegido
+       (assets/instructions/instructions-girl.png o instructions-boy.png),
+       controlado por js/core/screens.js. El botón "Got it!" es una
+       imagen (assets/instructions/boton-gotit.png) superpuesta junto
+       al personaje, igual que en la muestra. -->
   <div class="screen hidden" id="generalInstructionsScreen">
-    <h2 class="instructions-title">🎮 How to Play</h2>
-    <ul class="instructions-list" id="generalInstructionsList"></ul>
-    <button type="button" id="continueToLevelBtn" class="btn-primary btn-large">Got it! ▶</button>
+    <div class="instructions-image-wrapper">
+      <img id="generalInstructionsImg" class="instructions-image"
+           src="assets/instructions/instructions-girl.png" alt="How to play">
+      <button type="button" id="continueToLevelBtn" class="btn-got-it" aria-label="Got it, continue"></button>
+    </div>
   </div>
 
   <!-- ============ PANTALLA 3: JUEGO (Nivel 1) ============ -->

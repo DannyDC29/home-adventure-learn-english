@@ -17,6 +17,8 @@
   const continueToLevelBtn = document.getElementById("continueToLevelBtn");
   const allScreens = [coverScreen, characterSelectScreen, generalInstructionsScreen, gameScreen];
 
+  const generalInstructionsImg = document.getElementById("generalInstructionsImg");
+
   // Por ahora solo la niña es jugable; el niño se muestra pero está
   // deshabilitado ("Coming soon") hasta que se creen sus sprites.
   const selectableCards = document.querySelectorAll(".character-card:not(.disabled)");
@@ -27,16 +29,12 @@
     screenToShow.classList.remove("hidden");
   }
 
-  // Llena la lista de instrucciones generales una sola vez con los
-  // datos de js/data/instructions.js (GAME_INSTRUCTIONS.general).
-  function renderGeneralInstructions() {
-    const list = document.getElementById("generalInstructionsList");
-    if (!list || list.childElementCount > 0) return; // ya está llena
-    GAME_INSTRUCTIONS.general.forEach(({ icon, text }) => {
-      const li = document.createElement("li");
-      li.innerHTML = `<span class="instructions-icon">${icon}</span><span>${text}</span>`;
-      list.appendChild(li);
-    });
+  // Cambia la imagen de instrucciones generales según el personaje
+  // elegido: assets/instructions/instructions-girl.png o
+  // instructions-boy.png.
+  function updateGeneralInstructionsImage() {
+    const fileName = selectedCharacter === "boy" ? "instructions-boy.png" : "instructions-girl.png";
+    generalInstructionsImg.src = `assets/instructions/${fileName}`;
   }
 
   // Portada -> Selección de personaje
@@ -55,15 +53,18 @@
 
   // Selección de personaje -> Instrucciones generales
   startGameBtn.addEventListener("click", () => {
-    renderGeneralInstructions();
+    updateGeneralInstructionsImage();
     showScreen(generalInstructionsScreen);
   });
 
   // Instrucciones generales -> Juego (arranca Nivel 1 y muestra sus
   // instrucciones propias antes de dejar jugar; ver js/levels/level1.js)
+  // El botón "Got it!" es una imagen (sin texto), así que mientras
+  // carga solo se deshabilita y se atenúa un poco en vez de cambiar
+  // su texto.
   continueToLevelBtn.addEventListener("click", async () => {
     continueToLevelBtn.disabled = true;
-    continueToLevelBtn.textContent = "Loading...";
+    continueToLevelBtn.classList.add("is-loading");
 
     try {
       await window.startLevel1(selectedCharacter);
@@ -75,7 +76,7 @@
       alert("Hubo un problema al cargar el juego. Abre la consola (F12) para ver el detalle del error.");
     } finally {
       continueToLevelBtn.disabled = false;
-      continueToLevelBtn.textContent = "Got it! ▶";
+      continueToLevelBtn.classList.remove("is-loading");
     }
   });
 })();
