@@ -100,12 +100,21 @@
          El juego permanece en pausa hasta que se presiona "Start Mission". -->
     <div class="overlay hidden" id="levelInstructionsOverlay">
       <div class="overlay-card">
-        <p class="overlay-room-tag" id="levelInstructionsRoom">Living Room</p>
-        <h2 id="levelInstructionsTitle">Level 1.1 – Living Room Hunt</h2>
-        <p id="levelInstructionsMission">Mission text goes here.</p>
-        <ul class="overlay-examples hidden" id="levelInstructionsExamples"></ul>
-        <ul class="overlay-extra hidden" id="levelInstructionsExtra"></ul>
-        <button type="button" id="startMissionBtn" class="btn-primary btn-large">▶ Start Mission</button>
+        <div class="level-instructions-visual hidden" id="levelInstructionsVisual">
+          <img id="levelInstructionsImage" class="level-instructions-image"
+               src="assets/instructions/start-mission-level11.png"
+               alt="Level 1.1 instructions">
+          <button type="button" id="startMissionBtn" class="btn-start-mission" aria-label="Start Mission"></button>
+        </div>
+
+        <div class="level-instructions-text" id="levelInstructionsText">
+          <p class="overlay-room-tag" id="levelInstructionsRoom">Living Room</p>
+          <h2 id="levelInstructionsTitle">Level 1.1 – Living Room Hunt</h2>
+          <p id="levelInstructionsMission">Mission text goes here.</p>
+          <ul class="overlay-examples hidden" id="levelInstructionsExamples"></ul>
+          <ul class="overlay-extra hidden" id="levelInstructionsExtra"></ul>
+          <button type="button" id="startMissionTextBtn" class="btn-primary btn-large">▶ Start Mission</button>
+        </div>
       </div>
     </div>
 

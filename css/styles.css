@@ -490,12 +490,12 @@ kbd {
 
 .overlay-card {
   background: var(--color-card-bg);
-  border-radius: var(--radius-lg);
-  padding: 32px;
+  border-radius: 16px;
+  padding: 10px;
   text-align: center;
-  max-width: 90%;
-  width: 380px;
-  box-shadow: var(--shadow-soft);
+  max-width: 94%;
+  width: min(92vw, 520px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.14);
   animation: pop 0.35s ease;
 }
 
@@ -592,6 +592,51 @@ kbd {
 }
 
 /* ---------- Overlay: instrucciones del nivel ---------- */
+.level-instructions-visual {
+  position: relative;
+  width: min(100%, 560px);
+  margin: 0 auto;
+}
+
+.level-instructions-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-lg);
+}
+
+.btn-start-mission {
+  position: absolute;
+  left: 50%;
+  bottom: 6%;
+  transform: translateX(-50%);
+  width: min(54%, 240px);
+  aspect-ratio: 464 / 156;
+  background-image: url("../assets/instructions/button-start-mission.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+.btn-start-mission:hover {
+  transform: translateX(-50%) scale(1.04);
+  filter: brightness(1.05);
+}
+
+.btn-start-mission:active {
+  transform: translateX(-50%) scale(0.96);
+  filter: brightness(0.95);
+}
+
+.level-instructions-text {
+  text-align: center;
+}
+
 .overlay-room-tag {
   display: inline-block;
   background: var(--color-accent);

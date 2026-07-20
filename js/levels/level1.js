@@ -38,12 +38,15 @@
   const nextLevelBtn = document.getElementById("nextLevelBtn");
 
   const levelInstructionsOverlay = document.getElementById("levelInstructionsOverlay");
+  const levelInstructionsVisualEl = document.getElementById("levelInstructionsVisual");
+  const levelInstructionsTextEl = document.getElementById("levelInstructionsText");
   const levelInstructionsRoomEl = document.getElementById("levelInstructionsRoom");
   const levelInstructionsTitleEl = document.getElementById("levelInstructionsTitle");
   const levelInstructionsMissionEl = document.getElementById("levelInstructionsMission");
   const levelInstructionsExamplesEl = document.getElementById("levelInstructionsExamples");
   const levelInstructionsExtraEl = document.getElementById("levelInstructionsExtra");
   const startMissionBtn = document.getElementById("startMissionBtn");
+  const startMissionTextBtn = document.getElementById("startMissionTextBtn");
 
   const gameOverOverlay = document.getElementById("gameOverOverlay");
   const gameOverSummaryEl = document.getElementById("gameOverSummary");
@@ -167,28 +170,38 @@
     const data = GAME_INSTRUCTIONS.levels[LEVEL_KEY];
     if (!data) return;
 
-    levelInstructionsRoomEl.textContent = data.room;
-    levelInstructionsTitleEl.textContent = data.title;
-    levelInstructionsMissionEl.textContent = data.mission;
+    const isLevel11 = LEVEL_KEY === "1.1";
 
-    if (data.examples && data.examples.length > 0) {
-      levelInstructionsExamplesEl.innerHTML = data.examples
-        .map((ex) => `<li>${ex}</li>`)
-        .join("");
-      levelInstructionsExamplesEl.classList.remove("hidden");
+    if (isLevel11) {
+      levelInstructionsVisualEl.classList.remove("hidden");
+      levelInstructionsTextEl.classList.add("hidden");
     } else {
-      levelInstructionsExamplesEl.innerHTML = "";
-      levelInstructionsExamplesEl.classList.add("hidden");
-    }
+      levelInstructionsVisualEl.classList.add("hidden");
+      levelInstructionsTextEl.classList.remove("hidden");
 
-    if (data.extra && data.extra.length > 0) {
-      levelInstructionsExtraEl.innerHTML = data.extra
-        .map((ex) => `<li>${ex}</li>`)
-        .join("");
-      levelInstructionsExtraEl.classList.remove("hidden");
-    } else {
-      levelInstructionsExtraEl.innerHTML = "";
-      levelInstructionsExtraEl.classList.add("hidden");
+      levelInstructionsRoomEl.textContent = data.room;
+      levelInstructionsTitleEl.textContent = data.title;
+      levelInstructionsMissionEl.textContent = data.mission;
+
+      if (data.examples && data.examples.length > 0) {
+        levelInstructionsExamplesEl.innerHTML = data.examples
+          .map((ex) => `<li>${ex}</li>`)
+          .join("");
+        levelInstructionsExamplesEl.classList.remove("hidden");
+      } else {
+        levelInstructionsExamplesEl.innerHTML = "";
+        levelInstructionsExamplesEl.classList.add("hidden");
+      }
+
+      if (data.extra && data.extra.length > 0) {
+        levelInstructionsExtraEl.innerHTML = data.extra
+          .map((ex) => `<li>${ex}</li>`)
+          .join("");
+        levelInstructionsExtraEl.classList.remove("hidden");
+      } else {
+        levelInstructionsExtraEl.innerHTML = "";
+        levelInstructionsExtraEl.classList.add("hidden");
+      }
     }
   }
 
@@ -216,7 +229,12 @@
     );
   }
 
-  startMissionBtn.addEventListener("click", beginMission);
+  function startMissionHandler() {
+    beginMission();
+  }
+
+  startMissionBtn.addEventListener("click", startMissionHandler);
+  startMissionTextBtn.addEventListener("click", startMissionHandler);
 
   // Quita del escenario al jugador y los objetos de la partida
   // anterior (usado por el botón "Try Again" antes de reconstruir
