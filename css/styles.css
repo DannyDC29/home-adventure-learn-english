@@ -54,6 +54,11 @@ body {
    valor genérico de 480px según cuánto contenido tenga. */
 #characterSelectScreen {
   max-width: 600px;
+  background: #E6E8EB;
+  border: none;
+  box-shadow: none;
+  color: #ffffff;
+  image-rendering: pixelated;
 }
 
 #gameScreen {
@@ -132,14 +137,19 @@ body {
 }
 
 .character-select-title {
-  color: var(--color-primary);
-  margin-bottom: 24px;
+  color: #12345b;
+  margin: 0 0 28px;
+  font-family: "Courier New", monospace;
   font-size: clamp(1.2rem, 4vw, 1.6rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  -webkit-text-stroke: 1.5px #10182D;
+  text-shadow: 4px 4px 0 #ffffff;
 }
 
 .character-options {
   display: flex;
-  gap: 20px;
+  gap: 80px;
   flex-wrap: wrap;
   justify-content: center;
   margin-bottom: 8px;
@@ -147,19 +157,20 @@ body {
 
 .character-card {
   position: relative;
-  background: var(--color-card-bg);
-  border: 3px solid transparent;
-  border-radius: var(--radius-lg);
-  padding: 16px;
-  width: 140px;
+  background: #f4e7c5;
+  border: 4px solid #10182d;
+  border-radius: 0;
+  padding: 14px 12px 12px;
+  width: 148px;
+  min-height: 166px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  box-shadow: var(--shadow-soft);
-  transition: transform 0.15s ease, border-color 0.15s ease;
-  font-family: inherit;
+  box-shadow: 6px 6px 0 #0b1324;
+  transition: transform 0.1s steps(2), border-color 0.1s steps(2), box-shadow 0.1s steps(2);
+  font-family: "Courier New", monospace;
   font-size: 1rem;
   font-weight: bold;
   color: #2b2b2b;
@@ -170,6 +181,7 @@ body {
   width: 90px;
   height: 90px;
   object-fit: contain;
+  image-rendering: pixelated;
 }
 
 .character-placeholder {
@@ -177,16 +189,63 @@ body {
   align-items: center;
   justify-content: center;
   font-size: 2.4rem;
-  background: #f4f4fb;
-  border-radius: var(--radius-md);
+  background: #d9c9a5;
+  border-radius: 0;
 }
 
 .character-card:hover {
-  transform: translateY(-3px);
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0 #0b1324;
 }
 
 .character-card.selected {
-  border-color: var(--color-primary);
+  border-color: #ffb84c;
+  background: #fff2c9;
+  box-shadow: 6px 6px 0 #ffb84c;
+}
+
+.character-card.selected::after {
+  content: "SELECTED";
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 3px 6px;
+  background: #ffb84c;
+  border: 3px solid #10182d;
+  color: #10182d;
+  font-family: "Courier New", monospace;
+  font-size: 0.58rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+#startGameBtn {
+  margin-top: 28px;
+  background: #2878c8;
+  border: 4px solid #b08a00;
+  border-radius: 0;
+  padding: 14px 34px;
+  color: #ffffff;
+  font-family: "Courier New", monospace;
+  font-size: 1.05rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-shadow: 2px 2px 0 #174b82;
+  box-shadow: 6px 6px 0 #0b1324;
+  transition: transform 0.1s steps(2), box-shadow 0.1s steps(2), background 0.1s steps(2);
+}
+
+#startGameBtn:hover {
+  background: #3f94e3;
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0 #0b1324;
+}
+
+#startGameBtn:active {
+  transform: translate(3px, 3px);
+  box-shadow: 2px 2px 0 #0b1324;
 }
 
 .character-card.disabled {
@@ -733,4 +792,188 @@ kbd {
   .item {
     font-size: 0.55rem;
   }
+}
+
+/* ---------- Tema 16-bit: juego completo ---------- */
+#gameScreen {
+  background: #E6E8EB;
+  border: 4px solid #10182d;
+  box-shadow: 8px 8px 0 #737373;
+  image-rendering: pixelated;
+}
+
+.game-header,
+.hud,
+.game-wrapper {
+  font-family: "Courier New", monospace;
+}
+
+.level-title {
+  color: #12345b;
+  font-weight: 900;
+  text-transform: uppercase;
+  -webkit-text-stroke: 0.5px #12345b;
+  text-shadow: 3px 3px 0 #EEEEEE;
+}
+
+.hud {
+  background: #f4e7c5;
+  border: 4px solid #10182d;
+  border-radius: 0;
+  box-shadow: 5px 5px 0 #737373;
+}
+
+.hud-item {
+  border: 2px solid #10182d;
+  border-radius: 0;
+  background: #E6E8EB;
+  color: #10182d;
+  font-weight: 900;
+}
+
+.hud-value {
+  color: #12345b;
+}
+
+.game-container {
+  border: 6px solid #10182d;
+  border-radius: 0;
+  box-shadow: 6px 6px 0 #737373;
+  image-rendering: pixelated;
+}
+
+.room-label {
+  background: #2878c8;
+  border: 3px solid #10182d;
+  border-radius: 0;
+  color: #ffffff;
+  font-family: "Courier New", monospace;
+  font-weight: 900;
+  text-transform: uppercase;
+  box-shadow: 3px 3px 0 #0b1324;
+}
+
+.instructions {
+  color: #12345b;
+  font-family: "Courier New", monospace;
+  font-weight: 900;
+}
+
+kbd {
+  background: #f4e7c5;
+  border: 2px solid #10182d;
+  border-radius: 0;
+  box-shadow: 2px 2px 0 #737373;
+  color: #10182d;
+  font-family: "Courier New", monospace;
+  font-weight: 900;
+}
+
+.touch-btn {
+  background: #2878c8;
+  border: 4px solid #10182d;
+  border-radius: 0;
+  box-shadow: 4px 4px 0 #737373;
+  font-family: "Courier New", monospace;
+  font-weight: 900;
+}
+
+.touch-btn.active,
+.touch-btn:active {
+  background: #174b82;
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 #737373;
+}
+
+.player-sprite-img,
+.item-icon-img {
+  image-rendering: pixelated;
+}
+
+.item {
+  border: 3px solid #10182d;
+  border-radius: 0;
+  box-shadow: 4px 4px 0 #737373;
+  font-family: "Courier New", monospace;
+  font-weight: 900;
+  text-shadow: 2px 2px 0 #10182d;
+}
+
+.toast,
+.message-banner {
+  border: 4px solid #10182d;
+  border-radius: 0;
+  box-shadow: 5px 5px 0 #737373;
+  font-family: "Courier New", monospace;
+  font-weight: 900;
+}
+
+.overlay {
+  background: rgba(16, 24, 45, 0.72);
+}
+
+.overlay-card {
+  background: #E6E8EB;
+  border: 5px solid #10182d;
+  border-radius: 0;
+  box-shadow: 8px 8px 0 #737373;
+  font-family: "Courier New", monospace;
+}
+
+.overlay-card h2 {
+  color: #12345b;
+  font-weight: 900;
+  text-transform: uppercase;
+  text-shadow: 3px 3px 0 #EEEEEE;
+}
+
+.overlay-room-tag {
+  background: #2878c8;
+  border: 3px solid #10182d;
+  border-radius: 0;
+  color: #ffffff;
+  font-family: "Courier New", monospace;
+  font-weight: 900;
+  box-shadow: 3px 3px 0 #737373;
+}
+
+.overlay-examples li,
+.overlay-extra li {
+  background: #f4e7c5;
+  border: 3px solid #10182d;
+  border-radius: 0;
+  color: #10182d;
+  font-family: "Courier New", monospace;
+  font-weight: 700;
+  box-shadow: 3px 3px 0 #737373;
+}
+
+.btn-primary {
+  background: #2878c8;
+  border: 4px solid #b08a00;
+  border-radius: 0;
+  box-shadow: 5px 5px 0 #10182d;
+  font-family: "Courier New", monospace;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.btn-primary:hover {
+  background: #3f94e3;
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 #10182d;
+}
+
+.btn-got-it,
+.btn-start-mission {
+  image-rendering: pixelated;
+  filter: drop-shadow(4px 4px 0 #737373);
+}
+
+.level-instructions-image,
+.instructions-image {
+  border: 5px solid #10182d;
+  border-radius: 0;
+  box-shadow: 6px 6px 0 #737373;
+  image-rendering: pixelated;
 }
