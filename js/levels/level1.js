@@ -32,6 +32,7 @@
   const LEVEL_KEY = "1.1"; // clave en GAME_INSTRUCTIONS.levels (js/data/instructions.js)
 
   const container = document.getElementById("gameContainer");
+  const levelTitleEl = document.getElementById("levelTitle");
   const toastEl = document.getElementById("toast");
   const overlayEl = document.getElementById("levelCompleteOverlay");
   const overlaySummaryEl = document.getElementById("overlaySummary");
@@ -253,7 +254,13 @@
   // del juego todavía: eso ocurre en beginMission(), después de que
   // el jugador ve las instrucciones y presiona "Start Mission".
   function setup() {
+    // Por si veníamos de una partida anterior de este mismo nivel
+    // (el jugador lo completó y volvió a entrar desde el mapita):
+    // quitamos el jugador/objetos viejos y reiniciamos puntaje, vidas
+    // y objetos recolectados para que la partida empiece limpia.
+    clearBoard();
     HUD.init({ objectsTotal: CORRECT_ITEMS.length });
+    HUD.resetLevelProgress();
 
     // Jugador centrado en el escenario.
     player = new Player(container, {
@@ -395,15 +402,10 @@
 
   nextLevelBtn.addEventListener("click", () => {
     overlayEl.classList.add("hidden");
-    // Si js/levels/level1-2.js ya cargó, pasamos al Quiz de la sala.
-    // Si por alguna razón no está disponible, avisamos en vez de fallar
-    // en silencio.
-    if (typeof window.startLevel1_2 === "function") {
-      window.startLevel1_2(currentCharacter);
-    } else {
-      console.error("⚠️ window.startLevel1_2 no está definido (¿cargó js/levels/level1-2.js?)");
-      alert("¡Nivel 1.3 llegará pronto! 🚧");
-    }
+    // Ya no encadenamos directo al Nivel 1.2: volvemos al mapita para
+    // que el jugador elija el 1.2 (ahora desbloqueado) o repita el 1.1
+    // si quiere (ver js/core/levelmap.js).
+    window.LevelMap.completeLevel("1.1");
   });
 
   // ---------- Arranque ----------
@@ -425,6 +427,10 @@
   // (F12 → Console) para poder diagnosticarlo.
   window.startLevel1 = async function startLevel1(selectedCharacter) {
     currentCharacter = selectedCharacter === "boy" ? "boy" : "girl";
+    // El título pudo haber quedado en "Level 1.2..." o "Level 1.3..."
+    // si el jugador viene de rejugar el 1.1 desde el mapita después de
+    // haber llegado a esos niveles.
+    levelTitleEl.textContent = "Level 1.1 — Living Room Hunt";
     try {
       await preloadPromise;
     } catch (err) {

@@ -50,10 +50,32 @@
     </div>
   </div>
 
+  <!-- ============ PANTALLA 2.7: MAPA DE NIVELES ============ -->
+  <!-- Se muestra justo después de las instrucciones generales (en vez
+       de entrar directo al Nivel 1.1) y cada vez que el jugador termina
+       un nivel o presiona el botón "🗺️ Map" dentro del juego. Los
+       circulitos se insertan dinámicamente vía JS (js/core/levelmap.js):
+       bloqueados (🔒) para los niveles que aún no están disponibles,
+       resaltado para el siguiente nivel jugable, y con check (✓) para
+       los ya completados (se pueden volver a jugar). -->
+  <div class="screen hidden" id="levelMapScreen">
+    <div class="level-map-header">
+      <button type="button" id="mapHomeBtn" class="btn-map-home" aria-label="Back to home">Home</button>
+      <h2 class="level-map-title">CHOOSE YOUR LEVEL</h2>
+    </div>
+    <div class="level-map-character">
+      <img id="levelMapCharacterImg" src="assets/sprites/girl/Nina_Down_Idle.png" alt="Your character">
+    </div>
+    <div class="level-map-path" id="levelMapPath">
+      <!-- Nodos de nivel insertados dinámicamente vía JS. -->
+    </div>
+  </div>
+
   <!-- ============ PANTALLA 3: JUEGO (Nivel 1) ============ -->
   <div class="screen hidden" id="gameScreen">
 
     <header class="game-header">
+      <button type="button" id="backToMapBtn" class="btn-back-map" aria-label="Back to level map">Map</button>
       <p class="level-title" id="levelTitle">Level 1.1 — Living Room Hunt</p>
     </header>
 
@@ -228,6 +250,7 @@
   <script src="js/levels/level1.js"></script>
   <script src="js/levels/level1-2.js"></script>
   <script src="js/levels/level1-3.js"></script>
+  <script src="js/core/levelmap.js"></script>
   <script src="js/core/screens.js"></script>
 </body>
 </html>

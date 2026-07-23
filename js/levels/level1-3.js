@@ -309,7 +309,11 @@
   }
 
   organizeNextLevelBtn.addEventListener("click", () => {
-    alert("¡Level 2 — Kitchen llegará pronto! 🚧");
+    organizeCompleteOverlay.classList.add("hidden");
+    // Todavía no existe el Room 2 (Kitchen): volvemos al mapita, donde
+    // se ve bloqueado, y el jugador puede repetir cualquiera de los
+    // niveles de la Living Room mientras tanto.
+    window.LevelMap.completeLevel("1.3");
   });
 
   // ---------- Instrucciones del nivel (mismo overlay genérico) ----------
@@ -371,6 +375,10 @@
   // Quiz (1.2) y presiona "Next Level".
   window.startLevel1_3 = async function startLevel1_3(character) {
     currentCharacter = character === "boy" ? "boy" : "girl";
+
+    // Vidas completas al (re)entrar a este nivel desde el mapita, para
+    // que rejugarlo sea siempre una partida justa desde cero.
+    HUD.resetLives();
 
     if (gameWrapperEl) gameWrapperEl.classList.add("hidden");
     if (quizWrapperEl) quizWrapperEl.classList.add("hidden");

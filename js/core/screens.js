@@ -10,12 +10,17 @@
   const coverScreen = document.getElementById("coverScreen");
   const characterSelectScreen = document.getElementById("characterSelectScreen");
   const generalInstructionsScreen = document.getElementById("generalInstructionsScreen");
+  const levelMapScreen = document.getElementById("levelMapScreen");
   const gameScreen = document.getElementById("gameScreen");
 
   const playBtn = document.getElementById("playBtn");
   const startGameBtn = document.getElementById("startGameBtn");
   const continueToLevelBtn = document.getElementById("continueToLevelBtn");
-  const allScreens = [coverScreen, characterSelectScreen, generalInstructionsScreen, gameScreen];
+  // levelMapScreen y gameScreen también se incluyen aquí (aunque los
+  // controla principalmente js/core/levelmap.js) para que showScreen()
+  // los oculte correctamente al volver a la portada o a la selección
+  // de personaje.
+  const allScreens = [coverScreen, characterSelectScreen, generalInstructionsScreen, levelMapScreen, gameScreen];
 
   const generalInstructionsImg = document.getElementById("generalInstructionsImg");
 
@@ -57,26 +62,10 @@
     showScreen(generalInstructionsScreen);
   });
 
-  // Instrucciones generales -> Juego (arranca Nivel 1 y muestra sus
-  // instrucciones propias antes de dejar jugar; ver js/levels/level1.js)
-  // El botón "Got it!" es una imagen (sin texto), así que mientras
-  // carga solo se deshabilita y se atenúa un poco en vez de cambiar
-  // su texto.
-  continueToLevelBtn.addEventListener("click", async () => {
-    continueToLevelBtn.disabled = true;
-    continueToLevelBtn.classList.add("is-loading");
-
-    try {
-      await window.startLevel1(selectedCharacter);
-      showScreen(gameScreen);
-    } catch (err) {
-      // Si algo falla, avisamos claramente en vez de quedar "colgados"
-      // para siempre en Loading sin explicación.
-      console.error("⚠️ No se pudo iniciar el juego:", err);
-      alert("Hubo un problema al cargar el juego. Abre la consola (F12) para ver el detalle del error.");
-    } finally {
-      continueToLevelBtn.disabled = false;
-      continueToLevelBtn.classList.remove("is-loading");
-    }
+  // Instrucciones generales -> Mapa de niveles (ya no entra directo al
+  // Nivel 1.1: el jugador elige qué nivel jugar desde el mapita, ver
+  // js/core/levelmap.js).
+  continueToLevelBtn.addEventListener("click", () => {
+    window.LevelMap.show(selectedCharacter);
   });
 })();

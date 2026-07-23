@@ -293,12 +293,10 @@
 
   quizNextLevelBtn.addEventListener("click", () => {
     quizCompleteOverlay.classList.add("hidden");
-    if (typeof window.startLevel1_3 === "function") {
-      window.startLevel1_3(currentCharacter);
-    } else {
-      console.error("⚠️ window.startLevel1_3 no está definido (¿cargó js/levels/level1-3.js?)");
-      alert("¡Nivel 1.3 llegará pronto! 🚧");
-    }
+    // Ya no encadenamos directo al Nivel 1.3: volvemos al mapita para
+    // que el jugador elija el 1.3 (ahora desbloqueado) o repita el
+    // quiz si quiere (ver js/core/levelmap.js).
+    window.LevelMap.completeLevel("1.2");
   });
 
   // ---------- Punto de entrada ----------
@@ -309,6 +307,10 @@
   window.startLevel1_2 = async function startLevel1_2(character) {
     currentCharacter = character === "boy" ? "boy" : "girl";
     quizCharacterImg.src = CHARACTER_IDLE[currentCharacter];
+
+    // Vidas completas al (re)entrar a este nivel desde el mapita, para
+    // que rejugarlo sea siempre una partida justa desde cero.
+    HUD.resetLives();
 
     if (gameWrapperEl) gameWrapperEl.classList.add("hidden");
     quizWrapper.classList.remove("hidden");
