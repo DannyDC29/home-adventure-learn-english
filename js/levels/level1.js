@@ -49,7 +49,6 @@
   const startMissionTextBtn = document.getElementById("startMissionTextBtn");
 
   const gameOverOverlay = document.getElementById("gameOverOverlay");
-  const gameOverSummaryEl = document.getElementById("gameOverSummary");
   const retryBtn = document.getElementById("retryBtn");
 
   let player = null;
@@ -236,8 +235,12 @@
     beginMission();
   }
 
-  startMissionBtn.addEventListener("click", startMissionHandler);
-  startMissionTextBtn.addEventListener("click", startMissionHandler);
+  // Usamos .onclick (no addEventListener) a propósito: así, cuando el
+  // Nivel 1.2 (Quiz) tome el control de este mismo botón para su propia
+  // misión, simplemente reasigna .onclick y no queda este handler viejo
+  // sonando también.
+  startMissionBtn.onclick = startMissionHandler;
+  startMissionTextBtn.onclick = startMissionHandler;
 
   // Quita del escenario al jugador y los objetos de la partida
   // anterior (usado por el botón "Try Again" antes de reconstruir
@@ -371,7 +374,6 @@
   function onGameOver() {
     GameEngine.stop();
     Messages.showBanner(Messages.CATALOG.gameOver, "error", 1500);
-    gameOverSummaryEl.textContent = Messages.CATALOG.gameOver;
     setTimeout(() => {
       gameOverOverlay.classList.remove("hidden");
     }, 700);
@@ -386,7 +388,16 @@
   });
 
   nextLevelBtn.addEventListener("click", () => {
-    alert("¡Nivel 2 — Organize the Living Room llegará pronto! 🚧");
+    overlayEl.classList.add("hidden");
+    // Si js/levels/level1-2.js ya cargó, pasamos al Quiz de la sala.
+    // Si por alguna razón no está disponible, avisamos en vez de fallar
+    // en silencio.
+    if (typeof window.startLevel1_2 === "function") {
+      window.startLevel1_2(currentCharacter);
+    } else {
+      console.error("⚠️ window.startLevel1_2 no está definido (¿cargó js/levels/level1-2.js?)");
+      alert("¡Nivel 1.3 llegará pronto! 🚧");
+    }
   });
 
   // ---------- Arranque ----------

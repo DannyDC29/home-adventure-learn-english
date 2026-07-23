@@ -54,7 +54,7 @@
   <div class="screen hidden" id="gameScreen">
 
     <header class="game-header">
-      <p class="level-title" id="levelTitle">Level 1 — Living Room Hunt</p>
+      <p class="level-title" id="levelTitle">Level 1.1 — Living Room Hunt</p>
     </header>
 
     <!-- HUD: puntaje, vidas, contador de objetos -->
@@ -97,6 +97,26 @@
       </div>
     </main>
 
+    <!-- ============ Nivel 1.2 — Quiz (oculto hasta terminar el Hunt) ============
+         El personaje elegido (niña o niño) aparece al lado de la tarjeta
+         de preguntas. Lo controla js/levels/level1-2.js. -->
+    <section class="quiz-wrapper hidden" id="quizWrapper">
+      <div class="quiz-panel">
+        <img id="quizCharacterImg" class="quiz-character"
+             src="assets/sprites/girl/Nina_Down_Idle.png" alt="Your character">
+        <div class="quiz-card">
+          <p class="quiz-progress" id="quizProgress">Question 1 / 10</p>
+          <div class="quiz-question-row">
+            <img id="quizQuestionIcon" class="quiz-question-icon hidden" src="" alt="">
+            <p class="quiz-question" id="quizQuestionText">Question text goes here.</p>
+          </div>
+          <div class="quiz-options" id="quizOptions">
+            <!-- Los 4 botones de opciones se insertan dinámicamente -->
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Overlay de instrucciones del nivel: aparece antes de cada misión,
          con el texto de js/data/instructions.js (GAME_INSTRUCTIONS.levels).
          El juego permanece en pausa hasta que se presiona "Start Mission". -->
@@ -120,12 +140,21 @@
       </div>
     </div>
 
-    <!-- Overlay de nivel completado -->
+    <!-- Overlay de nivel completado (Hunt 1.1) -->
     <div class="overlay hidden" id="levelCompleteOverlay">
       <div class="overlay-card">
         <h2>🎉 ¡Nivel Completado! 🎉</h2>
         <p id="overlaySummary">You collected all the Living Room objects!</p>
         <button id="nextLevelBtn" class="btn-primary">Siguiente Nivel →</button>
+      </div>
+    </div>
+
+    <!-- Overlay de quiz completado (1.2) -->
+    <div class="overlay hidden" id="quizCompleteOverlay">
+      <div class="overlay-card">
+        <h2>🎉 Quiz Complete! 🎉</h2>
+        <p id="quizCompleteSummary">You answered all the questions!</p>
+        <button id="quizNextLevelBtn" class="btn-primary">Next Level →</button>
       </div>
     </div>
 
@@ -135,7 +164,6 @@
     <div class="overlay hidden" id="gameOverOverlay">
       <div class="overlay-card overlay-card-danger">
         <h2>💀 Game Over</h2>
-        <p id="gameOverSummary">Game Over – Try Again</p>
         <button type="button" id="retryBtn" class="btn-primary">🔁 Try Again</button>
       </div>
     </div>
@@ -162,6 +190,7 @@
   <script src="js/entities/player.js"></script>
   <script src="js/entities/item.js"></script>
   <script src="js/levels/level1.js"></script>
+  <script src="js/levels/level1-2.js"></script>
   <script src="js/core/screens.js"></script>
 </body>
 </html>

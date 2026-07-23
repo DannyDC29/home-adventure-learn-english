@@ -371,6 +371,119 @@ body {
   z-index: 5;
 }
 
+/* ---------- Quiz (Nivel 1.2 y siguientes cuestionarios) ---------- */
+.quiz-wrapper {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  justify-content: center;
+}
+
+.quiz-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 12px 0;
+}
+
+.quiz-character {
+  width: clamp(90px, 18vw, 160px);
+  height: auto;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.quiz-card {
+  background: var(--color-card-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  padding: 20px 24px;
+  width: min(100%, 480px);
+  text-align: center;
+}
+
+.quiz-progress {
+  margin: 0 0 10px;
+  font-weight: bold;
+  color: var(--color-primary);
+  font-size: 0.85rem;
+}
+
+.quiz-question-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  min-height: 78px;
+  justify-content: center;
+}
+
+.quiz-question-icon {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+
+.quiz-question {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: bold;
+  color: #2b2b2b;
+}
+
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.quiz-option-btn {
+  background: #f4f7fb;
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  color: #2b2b2b;
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.1s ease, background 0.1s ease, border-color 0.1s ease;
+}
+
+.quiz-option-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  background: #e9eff8;
+}
+
+.quiz-option-btn:disabled {
+  cursor: default;
+}
+
+.quiz-option-btn.correct {
+  background: var(--color-correct);
+  border-color: #2a9d6f;
+  color: white;
+}
+
+.quiz-option-btn.wrong {
+  background: var(--color-incorrect);
+  border-color: #c23f3f;
+  color: white;
+}
+
+@media (max-width: 480px) {
+  .quiz-panel {
+    flex-direction: column;
+  }
+  .quiz-character {
+    width: 110px;
+  }
+}
+
 .instructions {
   margin-top: 10px;
   text-align: center;
@@ -997,6 +1110,61 @@ kbd {
   image-rendering: pixelated;
 }
 
+/* ---------- Tema 16-bit: Quiz ---------- */
+.quiz-character {
+  image-rendering: pixelated;
+}
+
+.quiz-card {
+  background: #f4e7c5;
+  border: 4px solid #10182d;
+  border-radius: 0;
+  box-shadow: 6px 6px 0 #737373;
+  font-family: "Courier New", monospace;
+}
+
+.quiz-progress {
+  color: #12345b;
+}
+
+.quiz-question {
+  color: #10182d;
+}
+
+.quiz-option-btn {
+  background: #E6E8EB;
+  border: 3px solid #10182d;
+  border-radius: 0;
+  box-shadow: 3px 3px 0 #737373;
+  font-family: "Courier New", monospace;
+  font-weight: 900;
+  color: #10182d;
+}
+
+.quiz-option-btn:hover:not(:disabled) {
+  background: #ffffff;
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 #737373;
+}
+
+.quiz-option-btn:disabled {
+  opacity: 0.85;
+}
+
+.quiz-option-btn.correct {
+  background: #3ecf8e;
+  border-color: #10182d;
+  color: #10182d;
+  box-shadow: 3px 3px 0 #737373;
+}
+
+.quiz-option-btn.wrong {
+  background: #ff5c5c;
+  border-color: #10182d;
+  color: #ffffff;
+  box-shadow: 3px 3px 0 #737373;
+}
+
 /* ---------- Contraste de texto del juego ---------- */
 #gameScreen .level-title,
 #gameScreen .instructions,
@@ -1096,6 +1264,23 @@ kbd {
 #gameScreen .overlay-card p,
 #gameScreen .overlay-card li {
   padding: 0;
+}
+
+/* El override de arriba (línea ~1192) pone en inline-block TODOS los
+   <li> dentro de overlays, incluyendo los de ejemplos/extra — eso los
+   dejaba pegados unos junto a otros en vez de uno debajo del otro.
+   Los forzamos de vuelta a bloque, con espacio entre cada uno y un
+   espacio extra antes de la lista "extra" (ej. "Correct answers..."). */
+#gameScreen .overlay-examples li,
+#gameScreen .overlay-extra li {
+  display: block;
+  width: 100%;
+  margin: 0 0 8px;
+  padding: 8px 12px;
+}
+
+#gameScreen .overlay-extra {
+  margin-top: 22px;
 }
 
 #gameScreen .item-label {
