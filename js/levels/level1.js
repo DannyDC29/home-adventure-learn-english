@@ -67,9 +67,11 @@
     try {
       // Sprites del personaje: SPRITE_FRAMES está definido en player.js y es
       // visible aquí porque ambos scripts comparten el mismo scope global.
-      Object.values(SPRITE_FRAMES).forEach((frames) => {
-        urls.add(frames.idle);
-        frames.walk.forEach((src) => urls.add(src));
+      Object.values(SPRITE_FRAMES).forEach((characterFrames) => {
+        Object.values(characterFrames).forEach((frames) => {
+          urls.add(frames.idle);
+          frames.walk.forEach((src) => urls.add(src));
+        });
       });
     } catch (err) {
       console.error("⚠️ No se pudo leer SPRITE_FRAMES (¿player.js cargó bien?):", err);
@@ -119,6 +121,7 @@
 
   let toastTimeoutId = null;
   const incorrectCooldowns = new WeakMap(); // evita spam de sonido/toast por overlap continuo
+  let currentCharacter = "girl";
 
   // ---------- Utilidades de posicionamiento ----------
 
@@ -252,6 +255,7 @@
 
     // Jugador centrado en el escenario.
     player = new Player(container, {
+      character: currentCharacter,
       size: PLAYER_SIZE,
       speed: 300,
       x: (GameEngine.LOGICAL_WIDTH - PLAYER_SIZE) / 2,
@@ -403,6 +407,7 @@
   // "Loading..." para siempre). El error se imprime en la consola
   // (F12 → Console) para poder diagnosticarlo.
   window.startLevel1 = async function startLevel1(selectedCharacter) {
+    currentCharacter = selectedCharacter === "boy" ? "boy" : "girl";
     try {
       await preloadPromise;
     } catch (err) {

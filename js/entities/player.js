@@ -10,42 +10,75 @@
    reutilizan el idle de left/right) + 2 frames de caminata.
    ============================================ */
 
-const SPRITE_BASE = "assets/sprites/girl/";
-
 const SPRITE_FRAMES = {
-  down: {
-    idle: SPRITE_BASE + "Nina_Down_Idle.png",
-    walk: [SPRITE_BASE + "Nina_Down_Walk_01.png", SPRITE_BASE + "Nina_Down_Walk_02.png"],
+  girl: {
+    down: {
+      idle: "assets/sprites/girl/Nina_Down_Idle.png",
+      walk: ["assets/sprites/girl/Nina_Down_Walk_01.png", "assets/sprites/girl/Nina_Down_Walk_02.png"],
+    },
+    up: {
+      idle: "assets/sprites/girl/Nina_Up_Idle.png",
+      walk: ["assets/sprites/girl/Nina_Up_Walk_01.png", "assets/sprites/girl/Nina_Up_Walk_02.png"],
+    },
+    left: {
+      idle: "assets/sprites/girl/Nina_Left_Idle.png",
+      walk: ["assets/sprites/girl/Nina_Left_Walk_01.png", "assets/sprites/girl/Nina_Left_Walk_02.png"],
+    },
+    right: {
+      idle: "assets/sprites/girl/Nina_Right_Idle.png",
+      walk: ["assets/sprites/girl/Nina_Right_Walk_01.png", "assets/sprites/girl/Nina_Right_Walk_02.png"],
+    },
+    upLeft: {
+      idle: "assets/sprites/girl/Nina_Left_Idle.png",
+      walk: ["assets/sprites/girl/Nina_UpLeft_Walk_01.png", "assets/sprites/girl/Nina_UpLeft_Walk_02.png"],
+    },
+    upRight: {
+      idle: "assets/sprites/girl/Nina_Right_Idle.png",
+      walk: ["assets/sprites/girl/Nina_UpRight_Walk_01.png", "assets/sprites/girl/Nina_UpRight_Walk_02.png"],
+    },
+    downLeft: {
+      idle: "assets/sprites/girl/Nina_Left_Idle.png",
+      walk: ["assets/sprites/girl/Nina_DownLeft_Walk_01.png", "assets/sprites/girl/Nina_DownLeft_Walk_02.png"],
+    },
+    downRight: {
+      idle: "assets/sprites/girl/Nina_Right_Idle.png",
+      walk: ["assets/sprites/girl/Nina_DownRight_Walk_01.png", "assets/sprites/girl/Nina_DownRight_Walk_02.png"],
+    },
   },
-  up: {
-    idle: SPRITE_BASE + "Nina_Up_Idle.png",
-    walk: [SPRITE_BASE + "Nina_Up_Walk_01.png", SPRITE_BASE + "Nina_Up_Walk_02.png"],
-  },
-  left: {
-    idle: SPRITE_BASE + "Nina_Left_Idle.png",
-    walk: [SPRITE_BASE + "Nina_Left_Walk_01.png", SPRITE_BASE + "Nina_Left_Walk_02.png"],
-  },
-  right: {
-    idle: SPRITE_BASE + "Nina_Right_Idle.png",
-    walk: [SPRITE_BASE + "Nina_Right_Walk_01.png", SPRITE_BASE + "Nina_Right_Walk_02.png"],
-  },
-  // Diagonales: no tienen PNG "idle" propio, reutilizan el idle de su lado
-  // (izquierda o derecha), ya que solo se usan mientras el personaje camina.
-  upLeft: {
-    idle: SPRITE_BASE + "Nina_Left_Idle.png",
-    walk: [SPRITE_BASE + "Nina_UpLeft_Walk_01.png", SPRITE_BASE + "Nina_UpLeft_Walk_02.png"],
-  },
-  upRight: {
-    idle: SPRITE_BASE + "Nina_Right_Idle.png",
-    walk: [SPRITE_BASE + "Nina_UpRight_Walk_01.png", SPRITE_BASE + "Nina_UpRight_Walk_02.png"],
-  },
-  downLeft: {
-    idle: SPRITE_BASE + "Nina_Left_Idle.png",
-    walk: [SPRITE_BASE + "Nina_DownLeft_Walk_01.png", SPRITE_BASE + "Nina_DownLeft_Walk_02.png"],
-  },
-  downRight: {
-    idle: SPRITE_BASE + "Nina_Right_Idle.png",
-    walk: [SPRITE_BASE + "Nina_DownRight_Walk_01.png", SPRITE_BASE + "Nina_DownRight_Walk_02.png"],
+  boy: {
+    down: {
+      idle: "assets/sprites/boy/Nino_Down_Idle.png",
+      walk: ["assets/sprites/boy/Nino_Down_Walk_01.png", "assets/sprites/boy/Nino_Down_Walk_02.png"],
+    },
+    up: {
+      idle: "assets/sprites/boy/Nino_Up_Idle.png",
+      walk: ["assets/sprites/boy/Nino_Up_Walk_01.png", "assets/sprites/boy/Nino_Up_Walk_02.png"],
+    },
+    left: {
+      idle: "assets/sprites/boy/Nino_Left_Idle.png",
+      walk: ["assets/sprites/boy/Nino_Left_Walk_01.png", "assets/sprites/boy/Nino_Left_Walk_02.png"],
+    },
+    right: {
+      idle: "assets/sprites/boy/Nino_Right_Idle.png",
+      walk: ["assets/sprites/boy/Nino_Right_Walk_01.png", "assets/sprites/boy/Nino_Right_Walk_02.png"],
+    },
+    // Fallback temporal: mientras llegan los diagonales, reutiliza el frame recto más cercano.
+    upLeft: {
+      idle: "assets/sprites/boy/Nino_Left_Idle.png",
+      walk: ["assets/sprites/boy/Nino_Left_Walk_01.png", "assets/sprites/boy/Nino_Left_Walk_02.png"],
+    },
+    upRight: {
+      idle: "assets/sprites/boy/Nino_Right_Idle.png",
+      walk: ["assets/sprites/boy/Nino_Right_Walk_01.png", "assets/sprites/boy/Nino_Right_Walk_02.png"],
+    },
+    downLeft: {
+      idle: "assets/sprites/boy/Nino_Left_Idle.png",
+      walk: ["assets/sprites/boy/Nino_Left_Walk_01.png", "assets/sprites/boy/Nino_Left_Walk_02.png"],
+    },
+    downRight: {
+      idle: "assets/sprites/boy/Nino_Right_Idle.png",
+      walk: ["assets/sprites/boy/Nino_Right_Walk_01.png", "assets/sprites/boy/Nino_Right_Walk_02.png"],
+    },
   },
 };
 
@@ -58,6 +91,8 @@ class Player {
    */
   constructor(container, options = {}) {
     this.container = container;
+    this.character = options.character ?? "girl";
+    this.spriteFrames = SPRITE_FRAMES[this.character] ?? SPRITE_FRAMES.girl;
     this.size = options.size ?? 60;
     this.speed = options.speed ?? 300; // unidades lógicas por segundo
     this.x = options.x ?? (GameEngine.LOGICAL_WIDTH - this.size) / 2;
@@ -143,7 +178,7 @@ class Player {
 
   // Selecciona y aplica la imagen correcta según dirección + si camina.
   updateSprite() {
-    const frames = SPRITE_FRAMES[this.direction];
+    const frames = this.spriteFrames[this.direction];
     const src = this.isMoving ? frames.walk[this.animFrameIndex] : frames.idle;
 
     if (src !== this.lastSrc) {

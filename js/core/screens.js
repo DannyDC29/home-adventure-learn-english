@@ -19,8 +19,8 @@
 
   const generalInstructionsImg = document.getElementById("generalInstructionsImg");
 
-  // Por ahora solo la niña es jugable; el niño se muestra pero está
-  // deshabilitado ("Coming soon") hasta que se creen sus sprites.
+  // Ambos personajes pueden seleccionarse; cada uno usa sus propios
+  // sprites y su propia imagen de instrucciones generales.
   const selectableCards = document.querySelectorAll(".character-card:not(.disabled)");
   let selectedCharacter = "girl";
 
