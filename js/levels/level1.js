@@ -119,7 +119,6 @@
   }
 
   let toastTimeoutId = null;
-  const incorrectCooldowns = new WeakMap(); // evita spam de sonido/toast por overlap continuo
   let currentCharacter = "girl";
 
   // ---------- Utilidades de posicionamiento ----------
@@ -333,18 +332,19 @@
   }
 
   function handleIncorrectTouch(item) {
-    const now = performance.now();
-    const cooldownUntil = incorrectCooldowns.get(item) || 0;
-    if (now < cooldownUntil) return; // evita repetir sonido mientras el jugador sigue encima
+    // Este objeto ya se marcó como equivocado antes (quedó gris):
+    // no vuelve a quitar vida ni a sonar aunque el jugador siga
+    // pasando por encima de él.
+    if (item.wrong) return;
 
-    incorrectCooldowns.set(item, now + 1000); // 1 segundo de margen antes de repetir
+    item.markWrong();
     AudioManager.playIncorrect();
     item.shake();
     showToast(`❌ "${item.name}" doesn't belong in the Living Room!`);
     Messages.showBanner(Messages.CATALOG.wrongObject, "error", 900);
 
-    // Cada objeto incorrecto cuesta una vida. Al llegar a 0, termina
-    // la partida (antes esto nunca se descontaba).
+    // Cada objeto incorrecto cuesta una vida (solo la primera vez que
+    // se toca). Al llegar a 0, termina la partida.
     const remainingLives = HUD.loseLife();
     if (remainingLives <= 0) {
       onGameOver();
@@ -379,13 +379,19 @@
     }, 700);
   }
 
-  retryBtn.addEventListener("click", () => {
+  // Usamos .onclick (no addEventListener) a propósito, igual que con
+  // startMissionBtn: así, cuando el jugador muere en el Nivel 1.2 o 1.3,
+  // esos archivos reasignan retryBtn.onclick a su PROPIO handler de
+  // reintento (reinician ese nivel, no este). Sin esto, "Try Again"
+  // siempre habría vuelto al 1.1 sin importar en qué nivel se murió.
+  function retryHandler1_1() {
     gameOverOverlay.classList.add("hidden");
     clearBoard();
     setup();
     HUD.resetLevelProgress();
     beginMission();
-  });
+  }
+  retryBtn.onclick = retryHandler1_1;
 
   nextLevelBtn.addEventListener("click", () => {
     overlayEl.classList.add("hidden");

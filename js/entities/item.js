@@ -17,6 +17,7 @@ class Item {
     this.x = options.x;
     this.y = options.y;
     this.collected = false;
+    this.wrong = false; // true una vez que ya costó una vida: queda gris y no vuelve a descontar
 
     this.el = document.createElement("div");
     this.el.className = `item ${options.colorClass ?? "item-color-1"}`;
@@ -52,5 +53,13 @@ class Item {
     // Forzamos reflow para poder re-disparar la animación si se repite.
     void this.el.offsetWidth;
     this.el.classList.add("shake");
+  }
+
+  // Marca el objeto como "ya equivocado": queda gris de forma permanente
+  // y checkCollisions() lo ignora de ahí en adelante (no vuelve a
+  // quitar vida ni a sonar, aunque el jugador siga pasando por encima).
+  markWrong() {
+    this.wrong = true;
+    this.el.classList.add("wrong-grayed");
   }
 }

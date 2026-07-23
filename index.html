@@ -117,7 +117,34 @@
       </div>
     </section>
 
-    <!-- Overlay de instrucciones del nivel: aparece antes de cada misión,
+    <!-- ============ Nivel 1.3 — Organize the Living Room (oculto hasta
+         terminar el Quiz) ============
+         Tablero con la imagen "fantasma" (objetos semi-transparentes)
+         como fondo fijo durante todo el nivel — evita tener que ir
+         cambiando el fondo en cada arrastre. Cada objeto arrastrado
+         correctamente se "ancla" en su lugar (queda resaltado con un
+         borde verde en su zona). Al completar los 7, se revela la
+         imagen final (todos los objetos ya puestos) + el personaje que
+         el jugador eligió, de pie en medio de la sala. Lo controla
+         js/levels/level1-3.js. -->
+    <section class="organize-wrapper hidden" id="organizeWrapper">
+      <div class="organize-board" id="organizeBoard">
+        <!-- Las 7 zonas de destino (invisibles, sobre cada silueta
+             fantasma) se insertan dinámicamente vía JS. -->
+
+        <!-- Personaje elegido por el jugador: oculto hasta que se
+             completa el nivel (ver onOrganizeComplete en level1-3.js),
+             y colocado un poco más abajo del centro para no tapar el TV. -->
+        <img id="organizeFinalCharacter" class="organize-final-character hidden"
+             src="" alt="Your character">
+      </div>
+      <p class="organize-tray-label">Drag each object to its place:</p>
+      <div class="organize-tray" id="organizeTray">
+        <!-- Los 7 objetos arrastrables se insertan dinámicamente vía JS. -->
+      </div>
+    </section>
+
+    <!-- Overlay de instrucciones del nivel (compartido por 1.1, 1.2 y 1.3)
          con el texto de js/data/instructions.js (GAME_INSTRUCTIONS.levels).
          El juego permanece en pausa hasta que se presiona "Start Mission". -->
     <div class="overlay hidden" id="levelInstructionsOverlay">
@@ -158,6 +185,15 @@
       </div>
     </div>
 
+    <!-- Overlay de Nivel 1 completado (1.1 + 1.2 + 1.3, "Room Complete!") -->
+    <div class="overlay hidden" id="organizeCompleteOverlay">
+      <div class="overlay-card">
+        <h2>🏆 Room Complete! 🏆</h2>
+        <p id="organizeCompleteSummary">Congratulations! You've completed Level 1 — Living Room!</p>
+        <button id="organizeNextLevelBtn" class="btn-primary">Next Room →</button>
+      </div>
+    </div>
+
     <!-- Overlay de Game Over: aparece al perder las tres vidas.
          El botón Try Again reinicia el nivel actual (vidas, puntaje
          y objetos recolectados) sin recargar la página. -->
@@ -191,6 +227,7 @@
   <script src="js/entities/item.js"></script>
   <script src="js/levels/level1.js"></script>
   <script src="js/levels/level1-2.js"></script>
+  <script src="js/levels/level1-3.js"></script>
   <script src="js/core/screens.js"></script>
 </body>
 </html>

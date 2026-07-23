@@ -57,6 +57,9 @@
   const quizCompleteSummaryEl = document.getElementById("quizCompleteSummary");
   const quizNextLevelBtn = document.getElementById("quizNextLevelBtn");
 
+  const gameOverOverlay = document.getElementById("gameOverOverlay");
+  const retryBtn = document.getElementById("retryBtn");
+
   let currentCharacter = "girl";
   let questions = [];
   let currentIndex = 0;
@@ -236,6 +239,17 @@
     quizQuestionIconEl.classList.remove("hidden");
     AudioManager.speak(q.speakText);
 
+    // Cada respuesta incorrecta cuesta una vida (compartida con el resto
+    // del juego). Si se acaban, la partida termina aquí mismo y NO se
+    // programa el avance a la siguiente pregunta.
+    if (!isCorrect) {
+      const remainingLives = HUD.loseLife();
+      if (remainingLives <= 0) {
+        setTimeout(() => onGameOver(), 1800);
+        return;
+      }
+    }
+
     setTimeout(() => {
       currentIndex += 1;
       if (currentIndex >= questions.length) {
@@ -244,6 +258,22 @@
         renderQuestion();
       }
     }, isCorrect ? 1200 : 1800);
+  }
+
+  // Detiene el quiz y muestra el overlay de Game Over compartido. El
+  // botón "Try Again" queda apuntando a retryHandler1_2 (reinicia ESTE
+  // quiz desde la pregunta 1), no al Nivel 1.1.
+  function onGameOver() {
+    Messages.showBanner(Messages.CATALOG.gameOver, "error", 1500);
+    setTimeout(() => {
+      gameOverOverlay.classList.remove("hidden");
+    }, 700);
+  }
+
+  function retryHandler1_2() {
+    gameOverOverlay.classList.add("hidden");
+    HUD.resetLives();
+    startQuiz();
   }
 
   function onQuizComplete() {
@@ -262,7 +292,13 @@
   }
 
   quizNextLevelBtn.addEventListener("click", () => {
-    alert("¡Nivel 1.3 — Organize the Living Room llegará pronto! 🚧");
+    quizCompleteOverlay.classList.add("hidden");
+    if (typeof window.startLevel1_3 === "function") {
+      window.startLevel1_3(currentCharacter);
+    } else {
+      console.error("⚠️ window.startLevel1_3 no está definido (¿cargó js/levels/level1-3.js?)");
+      alert("¡Nivel 1.3 llegará pronto! 🚧");
+    }
   });
 
   // ---------- Punto de entrada ----------
@@ -285,6 +321,10 @@
     // handler anterior sin quedar los dos sonando a la vez).
     startMissionBtn.onclick = beginMission;
     startMissionTextBtn.onclick = beginMission;
+
+    // Igual con "Try Again": si el jugador muere en este quiz, debe
+    // reiniciar el quiz (no volver al Nivel 1.1).
+    retryBtn.onclick = retryHandler1_2;
 
     showLevelInstructions();
   };
