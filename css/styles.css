@@ -1367,6 +1367,17 @@ kbd {
   padding: 4px 8px;
 }
 
+/* El override de arriba deja los <p> del overlay como inline-block,
+   y como <button> también es inline-block por defecto, el botón
+   ("Next Level →", "Try Again", etc.) quedaba flotando al lado del
+   texto en vez de debajo. Forzamos que el botón sea su propia línea,
+   centrado, sin importar qué tan ancho sea el texto que lo precede. */
+#gameScreen .overlay-card .btn-primary {
+  display: block;
+  width: fit-content;
+  margin: 16px auto 0;
+}
+
 #gameScreen .hud-item {
   border-color: #000000;
 }

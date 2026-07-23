@@ -33,11 +33,12 @@
     { id: "coffee_table", icon: "Coffee_Table.png", label: "Coffee Table", left: 57.6, top: 62.5, width: 12.6, height: 15.1 },
     { id: "armchair", icon: "Armchair.png", label: "Armchair", left: 70.9, top: 57.6, width: 13.4, height: 27.2 },
     { id: "carpet", icon: "Carpet.png", label: "Carpet", left: 33.4, top: 55.6, width: 36.3, height: 36.0 },
-    // La zona de la lámpara es muy alta y angosta (para calzar con su
-    // silueta fantasma); usar el mismo 70% que los demás objetos la
-    // hacía verse enorme. iconScale la achica sin tocar el tamaño de
-    // los demás objetos (ajusta este número si aún se ve grande/chica).
-    { id: "lamp", icon: "Lamp.png", label: "Lamp", left: 0.9, top: 10.0, width: 18.7, height: 77.6, iconScale: 0.4 },
+    // Zona de la lámpara ajustada al recuadro verde exacto que Daniela
+    // marcó sobre el tablero (medido en píxeles sobre su captura:
+    // x 17–139, y 316–608 de una imagen de 1317x715 ≈ el tablero
+    // completo). Ajusta estos 4 números si hace falta mover/rotar
+    // el recuadro un poco más.
+    { id: "lamp", icon: "Lamp.png", label: "Lamp", left: 1.3, top: 44.2, width: 9.3, height: 40.8, iconScale: 0.9 },
   ];
   // Mapa por id para consultar rápido los datos de una zona (ej. su
   // iconScale) a partir del elemento .organize-zone soltado.
